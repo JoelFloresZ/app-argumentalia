@@ -6660,6 +6660,7 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
       // Nombre de la unidad donde se guarda el video
       ip_address: '0.0.0.0',
       // Direccion ip para el obs externo
+      ip_local: '128.0.0.0',
       // Crnometro
       tiempoRef: Date.now(),
       cronometrar: false,
@@ -6743,13 +6744,15 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
       axios.get("".concat(baseURL, "/ajustes/obs/ip/address")).then(function (response) {
         return response.data;
       }).then(function (ip) {
-        console.log(ip);
+        if (ip.length > 0) {
+          if (ip[0]) {
+            _this2.ip_local = ip[0].ip;
+          }
 
-        if (ip == '0.0.0.0') {
-          Swal.fire('Direccion IP?', 'Configura la dirección IP para la conexión remota a OBS?', 'question');
+          if (ip[1]) {
+            _this2.ip_address = ip[1].ip;
+          }
         }
-
-        _this2.ip_address = ip;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -6804,7 +6807,7 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
       var _this4 = this;
 
       obs.connect({
-        address: 'localhost:4444',
+        address: "".concat(this.ip_local, ":4444"),
         password: ''
       }).then(function () {
         // console.log(`Success! We're connected & authenticated.`);
@@ -6819,13 +6822,12 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
       })["catch"](function (err) {
         // Promise convention dicates you have a catch on every chain.
         // console.log(err);
-        _this4.modal.hide();
-
+        //this.modal.hide();
         if (err.code === 'CONNECTION_ERROR') {
           Swal.fire({
             icon: 'error',
             title: 'OBS no esta activo?',
-            text: 'La aplicacion OBS no esta activado para empezar a grabar. Debe de abrir el programa OBS para grabar la audiencia?' // footer: '<a href="">Why do I have this issue?</a>'
+            text: 'La aplicacion OBS no esta activado o el IP es incorrecto para empezar a grabar. Debe de abrir el programa OBS para grabar la audiencia?' // footer: '<a href="">Why do I have this issue?</a>'
 
           }); //alert('OBS - No esta activado, pára empezar a grabar hay que activar OBS Studio!.')
         }
