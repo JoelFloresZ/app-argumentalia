@@ -220,6 +220,7 @@ export default {
                 this.scenes = data.scenes
                 //Permite asignar el nombre del archivo
                 obs.send('SetFilenameFormatting', { 'filename-formatting': `${this.numeroExpediente}-${this.fechaCelebracionAudiencia}` })
+                obs.send('OpenProjector')
             })
             .catch(err => { // Promise convention dicates you have a catch on every chain.
                 // console.log(err);

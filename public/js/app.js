@@ -6819,6 +6819,7 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
         obs.send('SetFilenameFormatting', {
           'filename-formatting': "".concat(_this4.numeroExpediente, "-").concat(_this4.fechaCelebracionAudiencia)
         });
+        obs.send('OpenProjector');
       })["catch"](function (err) {
         // Promise convention dicates you have a catch on every chain.
         // console.log(err);
