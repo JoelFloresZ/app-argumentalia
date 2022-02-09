@@ -132,7 +132,8 @@ Route::middleware(['auth'])->group( function() {
      Route::get('/ajustes/conexión/remota/obs', [ConfigConexionObsController::class, 'index'])->name('config.obs');
      Route::post('/ajustes/obs/local', [ConfigConexionObsController::class, 'storeLocal'])->name('config.obs.post.local');
      Route::post('/ajustes/obs/remota', [ConfigConexionObsController::class, 'storeRemota'])->name('config.obs.post.remota');
-     Route::put('/ajustes/obs/{id}', [ConfigConexionObsController::class, 'update'])->name('config.obs.update');
+     Route::put('/ajustes/obs/local/{id}', [ConfigConexionObsController::class, 'updateLocal'])->name('config.obs.update.local');
+     Route::put('/ajustes/obs/remote/{id}', [ConfigConexionObsController::class, 'updateRemote'])->name('config.obs.update.remote');
      Route::get('/ajustes/obs/ip/address', [ConfigConexionObsController::class, 'getIPAddress'])->name('config.obs.ip.address');
     
     

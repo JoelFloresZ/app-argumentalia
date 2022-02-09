@@ -24,8 +24,11 @@
    <div class="d-flex bd-highlight">
       {{-- Navigation --}}
       <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-         <button class="nav-link active" id="v-pills-audiencia-tab" data-bs-toggle="pill" data-bs-target="#v-pills-audiencia" type="button" role="tab" aria-controls="v-pills-audiencia" aria-selected="true"><span class="iconify h4 me-1" data-icon="carbon:video-filled"></span><br>Audiencia</button>
-         <button class="nav-link" id="v-pills-asistencia-tab" data-bs-toggle="pill" data-bs-target="#v-pills-asistencia" type="button" role="tab" aria-controls="v-pills-asistencia" aria-selected="false"><span class="iconify h4 me-1" data-icon="bi:file-check-fill"></span><br>Asistencia</button>
+         <button class="nav-link active" id="v-pills-audiencia-tab" data-bs-toggle="pill" data-bs-target="#v-pills-audiencia" type="button" role="tab" aria-controls="v-pills-audiencia" aria-selected="true">
+            <span class="iconify h4 me-1" data-icon="carbon:video-filled"></span><br>Audiencia
+         </button>
+         <button class="nav-link" id="v-pills-asistencia-tab" data-bs-toggle="pill" data-bs-target="#v-pills-asistencia" type="button" role="tab" aria-controls="v-pills-asistencia" aria-selected="false"><span class="iconify h4 me-1" data-icon="bi:file-check-fill"></span>
+            <br>Asistencia</button>
          <button class="nav-link" id="v-pills-notas-tab" data-bs-toggle="pill" data-bs-target="#v-pills-notas" type="button" role="tab" aria-controls="v-pills-notas" aria-selected="false"><span class="iconify h4 me-1" data-icon="fa-solid:sticky-note"></span><br>Notas</button>
          <button class="nav-link" id="v-pills-archivos-tab" data-bs-toggle="pill" data-bs-target="#v-pills-archivos" type="button" role="tab" aria-controls="v-pills-archivos" aria-selected="false"><span class="iconify h4 me-1" data-icon="ant-design:file-zip-filled"></span><br>Archivos</button>
          

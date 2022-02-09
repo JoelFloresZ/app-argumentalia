@@ -6,9 +6,6 @@
             <div class="col-7">
                 <!-- Lista de camaras activadas Camaras -->
                 <h5>Dispositivos de video conectados 
-                    <button type="button" class="btn btn-dark me-2" @click="startVideoWebCam">
-                        Recargar video
-                    </button>
                 </h5>
                 <div class="mb-2 d-flex flex-nowrap">
                     <button class="btn btn-sm btn-outline-primary me-1 mb-1" v-for="(video, i) in videoSourcesSelect" 
@@ -114,6 +111,7 @@ export default {
             nameVideo: '', // Nombre del video grabado
             unidadDisk: '', // Nombre de la unidad donde se guarda el video
             ip_address: '0.0.0.0', // Direccion ip para el obs externo
+            ip_local: '128.0.0.0',
             // Crnometro
             tiempoRef : Date.now(),
             cronometrar : false,
@@ -170,21 +168,24 @@ export default {
             axios.get(`${baseURL}/ajustes/obs/ip/address`)
             .then( response => response.data )
             .then( ip => {
-                console.log(ip);
-                if(ip == '0.0.0.0') {
-                    Swal.fire(
-                        'Direccion IP?',
-                        'Configura la dirección IP para la conexión remota a OBS?',
-                        'question'
-                    )
+                if(ip.length > 0) {
+                    if(ip[0]) {
+                        this.ip_local = ip[0].ip
+                    }
+
+                    if(ip[1]) {
+                        this.ip_address = ip[1].ip
+                    }
                 }
-                
-                this.ip_address = ip                
+               
+                              
             }) 
             .catch(function (error) {
                 console.log(error);
             })
         },
+
+    
         // Obtener video de la WebCam
         async startVideoWebCam() {
             this.video =  document.getElementById('video-record')
@@ -211,7 +212,7 @@ export default {
         },
 
         connectOBS() {
-            obs.connect({ address: 'localhost:4444', password: ''}).then(() => {
+            obs.connect({ address: `${this.ip_local}:4444`, password: ''}).then(() => {
                 // console.log(`Success! We're connected & authenticated.`);
                 return obs.send('GetSceneList');
             }).then(data => {
@@ -222,12 +223,12 @@ export default {
             })
             .catch(err => { // Promise convention dicates you have a catch on every chain.
                 // console.log(err);
-                this.modal.hide();
+                //this.modal.hide();
                 if(err.code === 'CONNECTION_ERROR') {
                     Swal.fire({
                         icon: 'error',
                         title: 'OBS no esta activo?',
-                        text: 'La aplicacion OBS no esta activado para empezar a grabar. Debe de abrir el programa OBS para grabar la audiencia?',
+                        text: 'La aplicacion OBS no esta activado o el IP es incorrecto para empezar a grabar. Debe de abrir el programa OBS para grabar la audiencia?',
                        // footer: '<a href="">Why do I have this issue?</a>'
                     })
                     //alert('OBS - No esta activado, pára empezar a grabar hay que activar OBS Studio!.')
