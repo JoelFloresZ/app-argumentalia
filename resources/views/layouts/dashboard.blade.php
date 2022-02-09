@@ -86,7 +86,9 @@
             </nav>
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4 mb-5 mt-5">
-                @yield('content')
+                <divc class="pt-xl-5 pt-lg-3 p-md-0 pt-0">
+                    @yield('content')
+                </div>
             </main>
         </div>
     </div>

@@ -45,6 +45,28 @@
 
             <!-- Mas configuraciones -->
             <div class="col-5">
+
+                <!-- alert -->
+                <div class="alert alert-warning" role="alert" v-if="alert.showAlert">
+                    <div  class="w-100 d-flex justify-content-between align-items-center">
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                            </svg>
+                            Fallo una conexión
+                        </div>
+
+                        <button type="button" class="btn-close" @click="alert.showAlert = false"></button>
+                    </div>
+
+                    <div>
+                        <br/>
+                        <button type="button" class="btn btn-sm btn-warning" v-if="alert.typeAlert === 'obsExternoNoActive'" @click="showMensajeConexionFaildOBSExterno()">Ver mensaje</button>
+                        <button type="button" class="btn btn-sm btn-warning" v-if="alert.typeAlert === 'obsExternoNoRecord'" @click="showMensajeConexionFailVideoRecordObsExterno()">Ver mensaje</button>
+                    </div>                   
+                </div>
+
+
                 <!-- Form file video -->
                 <div class="border p-2 bg-light" v-if="showFormFile">
                     <form v-on:submit.prevent="uploadFileVideo" method="POST" enctype="multipart/form-data">
@@ -131,6 +153,10 @@ export default {
                 showResumen: false,
                 showStop: false
             },
+            alert: {
+                showAlert: false,
+                typeAlert: null
+            }
         }
     
     },
@@ -218,13 +244,14 @@ export default {
             }).then(data => {
                 // console.log(data.scenes);
                 this.scenes = data.scenes
+                this.modal.hide();
                 //Permite asignar el nombre del archivo
                 obs.send('SetFilenameFormatting', { 'filename-formatting': `${this.numeroExpediente}-${this.fechaCelebracionAudiencia}` })
                 obs.send('OpenProjector')
             })
             .catch(err => { // Promise convention dicates you have a catch on every chain.
                 // console.log(err);
-                //this.modal.hide();
+                this.modal.hide()
                 if(err.code === 'CONNECTION_ERROR') {
                     Swal.fire({
                         icon: 'error',
@@ -240,24 +267,30 @@ export default {
 
         connectOBSExterno() {
            
-            // Si la direccion es cambiada hay que actualizar por la nueva direccion de la maquina externa
-                
+            // Si la direccion es cambiada hay que actualizar por la nueva direccion de la maquina externa    
             obs2.connect({ address: `${this.ip_address}:4444`, password: ''}).then(() => {
-                //this.modal.hide(); //TODO: descometar para ocultar el modal
                 obs2.send('SetFilenameFormatting', { 'filename-formatting': `${this.numeroExpediente}-${this.fechaCelebracionAudiencia}` })
             })
             .catch(err => { // Promise convention dicates you have a catch on every chain.
-                //console.log(err);
-                //this.modal.hide();  //TODO: descometar para ocultar el modal
-                Swal.fire(
-                    'No se pudo conectar a OBS externo',
-                    'No se pudo conectar a la aplicación de OBS, ya que no esta activa o la dirección IP es incorrecta para la conexión remota?',
-                    'question'
-                )
-            });
-                
-            //this.modal.hide()
-           
+                this.alert.showAlert = true
+                this.alert.typeAlert = 'obsExternoNoActive'
+            });           
+        },
+
+        showMensajeConexionFaildOBSExterno() {
+            Swal.fire({
+                icon: 'error',
+                title: 'No se pudo conectar a OBS externo',
+                text: 'No se pudo conectar a la aplicación de OBS, ya que no esta activa o la dirección IP es incorrecta para la conexión remota?'
+            })
+        },
+
+        showMensajeConexionFailVideoRecordObsExterno() {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Conexión fallida',
+                text: '¿OBS Externo no esta activado?',
+            })
         },
 
         changeSceneHD60_S() {
@@ -344,11 +377,16 @@ export default {
                 }).then((result) => {
                 /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
-                    //Swal.fire('Saved!', '', 'success')
-                   
+                                      
                     this.startRecord().then(res => {
                         if(res) {
-                            this.startRecordOBS2()
+                            obs2.send('StartRecording').catch( err => {
+                                                               
+                                this.alert.showAlert = false;
+                                this.alert.typeAlert = 'obsExternoNoRecord'
+                                this.alert.showAlert = true;
+                                
+                            }) 
                         }
                     }).catch(err => {console.log(err);})                    
                     
@@ -466,7 +504,6 @@ export default {
                 this.acumulado = 0,
                 this.tiempo = '00:00:00.000'
                 await obs.send('StartRecording')
-                console.log('log');
                 // Controls
                 this.controls.showPlay  = false;
                 this.controls.showPause = true;
@@ -479,8 +516,8 @@ export default {
 
                 if(error.status === 'error') {
                     Swal.fire({
-                        icon: 'warning',
-                        title: 'Oops...',
+                        icon: 'error',
+                        title: 'Conexión fallida',
                         text: '¿OBS no esta activado?. Para grabar hay que conectarse a OBS...',
                     })
                 }
@@ -490,21 +527,11 @@ export default {
             
         },
 
-        async startRecordOBS2() {
-    
-            try { 
-                
-                await obs2.send('StartRecording')  
-
-            } catch (error) {
-                if(error.status === 'error') {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Oops...',
-                        text: '¿OBS Externo no esta activado?',
-                    })
-                }
-            }  
+        startRecordOBS2() {
+            obs2.send('StartRecording').catch( err => {
+                this.alert.showAlert = true;
+                this.alert.typeAlert = 'obsExternoNoRecord'
+            }) 
             
         },
 
@@ -806,7 +833,7 @@ export default {
                         this.controls.showPlay  = false;
                         Swal.fire({
                             icon: 'warning',
-                            title: 'Error',
+                            title: 'Audiencia finalizado',
                             text: 'La audiencia a finalizado, ya no puedes grabar.',
                         })
                     }
@@ -819,7 +846,7 @@ export default {
     },
 
     mounted() {
-        // this.launchModal(); // TODO: Descomentar para que se active el modal de cargando
+        this.launchModal(); 
         this.startVideoWebCam()
         this.listMediaDevices()
         this.cronometro()
