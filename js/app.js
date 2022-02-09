@@ -5328,6 +5328,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 //var diskinfo = require('diskinfo')
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -6623,6 +6626,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 // OBS 
 
 
@@ -6682,6 +6707,10 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
         showPause: false,
         showResumen: false,
         showStop: false
+      },
+      alert: {
+        showAlert: false,
+        typeAlert: null
       }
     };
   },
@@ -6814,7 +6843,10 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
         return obs.send('GetSceneList');
       }).then(function (data) {
         // console.log(data.scenes);
-        _this4.scenes = data.scenes; //Permite asignar el nombre del archivo
+        _this4.scenes = data.scenes;
+
+        _this4.modal.hide(); //Permite asignar el nombre del archivo
+
 
         obs.send('SetFilenameFormatting', {
           'filename-formatting': "".concat(_this4.numeroExpediente, "-").concat(_this4.fechaCelebracionAudiencia)
@@ -6823,7 +6855,8 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
       })["catch"](function (err) {
         // Promise convention dicates you have a catch on every chain.
         // console.log(err);
-        //this.modal.hide();
+        _this4.modal.hide();
+
         if (err.code === 'CONNECTION_ERROR') {
           Swal.fire({
             icon: 'error',
@@ -6837,21 +6870,32 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
     connectOBSExterno: function connectOBSExterno() {
       var _this5 = this;
 
-      // Si la direccion es cambiada hay que actualizar por la nueva direccion de la maquina externa
+      // Si la direccion es cambiada hay que actualizar por la nueva direccion de la maquina externa    
       obs2.connect({
         address: "".concat(this.ip_address, ":4444"),
         password: ''
       }).then(function () {
-        //this.modal.hide(); //TODO: descometar para ocultar el modal
         obs2.send('SetFilenameFormatting', {
           'filename-formatting': "".concat(_this5.numeroExpediente, "-").concat(_this5.fechaCelebracionAudiencia)
         });
       })["catch"](function (err) {
         // Promise convention dicates you have a catch on every chain.
-        //console.log(err);
-        //this.modal.hide();  //TODO: descometar para ocultar el modal
-        Swal.fire('No se pudo conectar a OBS externo', 'No se pudo conectar a la aplicación de OBS, ya que no esta activa o la dirección IP es incorrecta para la conexión remota?', 'question');
-      }); //this.modal.hide()
+        _this5.alert.showAlert = true;
+        _this5.alert.typeAlert = 'obsExternoNoActive';
+      });
+    },
+    showMensajeConexionFaildOBSExterno: function showMensajeConexionFaildOBSExterno() {
+      Swal.fire({
+        icon: 'error',
+        text: 'No se pudo conectar a OBS, verifica que este activa o la dirección IP sea correcta.?'
+      });
+    },
+    showMensajeConexionFailVideoRecordObsExterno: function showMensajeConexionFailVideoRecordObsExterno() {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Conexión fallida',
+        text: '¿OBS Externo no esta activado?'
+      });
     },
     changeSceneHD60_S: function changeSceneHD60_S() {
       obs.send('SetCurrentScene', {
@@ -6947,10 +6991,13 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
       }).then(function (result) {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
-          //Swal.fire('Saved!', '', 'success')
           _this7.startRecord().then(function (res) {
             if (res) {
-              _this7.startRecordOBS2();
+              obs2.send('StartRecording')["catch"](function (err) {
+                _this7.alert.showAlert = false;
+                _this7.alert.typeAlert = 'obsExternoNoRecord';
+                _this7.alert.showAlert = true;
+              });
             }
           })["catch"](function (err) {
             console.log(err);
@@ -7080,8 +7127,7 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
                 return obs.send('StartRecording');
 
               case 5:
-                console.log('log'); // Controls
-
+                // Controls
                 _this11.controls.showPlay = false;
                 _this11.controls.showPause = true;
                 _this11.controls.showStop = true;
@@ -7091,29 +7137,39 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
                 _this11.cronometrar = true;
                 return _context3.abrupt("return", true);
 
-              case 14:
-                _context3.prev = 14;
+              case 13:
+                _context3.prev = 13;
                 _context3.t0 = _context3["catch"](0);
 
                 if (_context3.t0.status === 'error') {
                   Swal.fire({
-                    icon: 'warning',
-                    title: 'Oops...',
+                    icon: 'error',
+                    title: 'Conexión fallida',
                     text: '¿OBS no esta activado?. Para grabar hay que conectarse a OBS...'
                   });
                 }
 
                 return _context3.abrupt("return", false);
 
-              case 18:
+              case 17:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3, null, [[0, 14]]);
+        }, _callee3, null, [[0, 13]]);
       }))();
     },
     startRecordOBS2: function startRecordOBS2() {
+      var _this12 = this;
+
+      obs2.send('StartRecording')["catch"](function (err) {
+        _this12.alert.showAlert = true;
+        _this12.alert.typeAlert = 'obsExternoNoRecord';
+      });
+    },
+    pauseRecord: function pauseRecord() {
+      var _this13 = this;
+
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
           while (1) {
@@ -7121,89 +7177,53 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
               case 0:
                 _context4.prev = 0;
                 _context4.next = 3;
-                return obs2.send('StartRecording');
+                return obs.send('PauseRecording');
 
               case 3:
-                _context4.next = 8;
+                // Controls
+                _this13.controls.showPause = false;
+                _this13.controls.showResumen = true;
+                _this13.cronometrar = false;
+
+                _this13.video.pause();
+
+                _context4.next = 9;
+                return obs2.send('PauseRecording');
+
+              case 9:
+                _context4.next = 14;
                 break;
 
-              case 5:
-                _context4.prev = 5;
+              case 11:
+                _context4.prev = 11;
                 _context4.t0 = _context4["catch"](0);
+                console.log(_context4.t0);
 
-                if (_context4.t0.status === 'error') {
-                  Swal.fire({
-                    icon: 'warning',
-                    title: 'Oops...',
-                    text: '¿OBS Externo no esta activado?'
-                  });
-                }
-
-              case 8:
+              case 14:
               case "end":
                 return _context4.stop();
             }
           }
-        }, _callee4, null, [[0, 5]]);
+        }, _callee4, null, [[0, 11]]);
       }))();
     },
-    pauseRecord: function pauseRecord() {
-      var _this12 = this;
+    resumenRecord: function resumenRecord() {
+      var _this14 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                _context5.prev = 0;
-                _context5.next = 3;
-                return obs.send('PauseRecording');
-
-              case 3:
-                // Controls
-                _this12.controls.showPause = false;
-                _this12.controls.showResumen = true;
-                _this12.cronometrar = false;
-
-                _this12.video.pause();
-
-                _context5.next = 9;
-                return obs2.send('PauseRecording');
-
-              case 9:
-                _context5.next = 14;
-                break;
-
-              case 11:
-                _context5.prev = 11;
-                _context5.t0 = _context5["catch"](0);
-                console.log(_context5.t0);
-
-              case 14:
-              case "end":
-                return _context5.stop();
-            }
-          }
-        }, _callee5, null, [[0, 11]]);
-      }))();
-    },
-    resumenRecord: function resumenRecord() {
-      var _this13 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee6$(_context6) {
-          while (1) {
-            switch (_context6.prev = _context6.next) {
-              case 0:
                 //if(!confirm('¿Estas seguro de seguir grabando?')) return
                 try {
                   obs.send('ResumeRecording'); // Controls
 
-                  _this13.controls.showPause = true;
-                  _this13.controls.showResumen = false;
-                  _this13.cronometrar = true;
+                  _this14.controls.showPause = true;
+                  _this14.controls.showResumen = false;
+                  _this14.cronometrar = true;
 
-                  _this13.video.play();
+                  _this14.video.play();
 
                   obs2.send('ResumeRecording');
                 } catch (error) {
@@ -7212,14 +7232,121 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
 
               case 1:
               case "end":
-                return _context6.stop();
+                return _context5.stop();
             }
           }
-        }, _callee6);
+        }, _callee5);
       }))();
     },
     stopRecord: function stopRecord() {
-      var _this14 = this;
+      var _this15 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6() {
+        var token, config, res;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                _context6.prev = 0;
+                token = document.getElementsByName('_token');
+                config = {
+                  headers: {
+                    'content-type': 'application/x-www-form-urlencoded'
+                  },
+                  'X-CSRF-TOKEN': token[0].value // <--- aquí el token
+
+                };
+                _context6.next = 5;
+                return axios.put("".concat(baseURL, "/audiencia/expediente/finalizar/").concat(_this15.expedienteID), config);
+
+              case 5:
+                res = _context6.sent;
+
+                if (!(res.data.status === 200)) {
+                  _context6.next = 25;
+                  break;
+                }
+
+                _context6.next = 9;
+                return obs.send('StopRecording');
+
+              case 9:
+                _this15.video.pause();
+
+                _this15.cronometrar = false; //Permite asignar el nombre del archivo
+
+                _context6.next = 13;
+                return obs.send('SetFilenameFormatting', {
+                  'filename-formatting': "".concat(_this15.numeroExpediente, "-").concat(_this15.fechaCelebracionAudiencia)
+                });
+
+              case 13:
+                //this.showFormFile = true; muestra el formualrio para subir el video grabado
+                //Controls
+                _this15.controls.showPlay = false;
+                _this15.controls.showPause = false;
+                _this15.controls.showResumen = false;
+                _this15.controls.showStop = false; // Alerta de exito
+
+                Swal.fire({
+                  position: 'top-end',
+                  icon: 'success',
+                  title: 'Grabación finalizada',
+                  showConfirmButton: false,
+                  timer: 1500
+                });
+
+                _this15.saveInfoVideoRecord(); // GUardamos los dato del video grabado en la BD
+                // OBS 2
+
+
+                _context6.next = 21;
+                return obs2.send('StopRecording');
+
+              case 21:
+                _context6.next = 23;
+                return obs2.send('SetFilenameFormatting', {
+                  'filename-formatting': "".concat(_this15.numeroExpediente, "-").concat(_this15.fechaCelebracionAudiencia)
+                });
+
+              case 23:
+                _context6.next = 26;
+                break;
+
+              case 25:
+                if (res.data.status === 404) {
+                  Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Ocurrio un error al establecer en receso la audiencia'
+                  });
+                } else if (res.data.status === 500) {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Ocurrio un error al establecer en receso la audiencia, Intente de nuevo o pare la grabación desde OBS y recargue la página'
+                  });
+                }
+
+              case 26:
+                _context6.next = 31;
+                break;
+
+              case 28:
+                _context6.prev = 28;
+                _context6.t0 = _context6["catch"](0);
+                console.log(_context6.t0);
+
+              case 31:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6, null, [[0, 28]]);
+      }))();
+    },
+    recesoRecord: function recesoRecord() {
+      var _this16 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee7() {
         var token, config, res;
@@ -7237,7 +7364,7 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
 
                 };
                 _context7.next = 5;
-                return axios.put("".concat(baseURL, "/audiencia/expediente/finalizar/").concat(_this14.expedienteID), config);
+                return axios.put("".concat(baseURL, "/audiencia/expediente/pausar/").concat(_this16.expedienteID), config);
 
               case 5:
                 res = _context7.sent;
@@ -7251,32 +7378,32 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
                 return obs.send('StopRecording');
 
               case 9:
-                _this14.video.pause();
+                _this16.video.pause();
 
-                _this14.cronometrar = false; //Permite asignar el nombre del archivo
+                _this16.cronometrar = false; //Permite asignar el nombre del archivo
 
                 _context7.next = 13;
                 return obs.send('SetFilenameFormatting', {
-                  'filename-formatting': "".concat(_this14.numeroExpediente, "-").concat(_this14.fechaCelebracionAudiencia)
+                  'filename-formatting': "".concat(_this16.numeroExpediente, "-").concat(_this16.fechaCelebracionAudiencia)
                 });
 
               case 13:
                 //this.showFormFile = true; muestra el formualrio para subir el video grabado
                 //Controls
-                _this14.controls.showPlay = false;
-                _this14.controls.showPause = false;
-                _this14.controls.showResumen = false;
-                _this14.controls.showStop = false; // Alerta de exito
+                _this16.controls.showPlay = true;
+                _this16.controls.showPause = false;
+                _this16.controls.showResumen = false;
+                _this16.controls.showStop = false; // Alerta de exito
 
                 Swal.fire({
                   position: 'top-end',
                   icon: 'success',
-                  title: 'Grabación finalizada',
+                  title: 'Audiencia en receso',
                   showConfirmButton: false,
                   timer: 1500
                 });
 
-                _this14.saveInfoVideoRecord(); // GUardamos los dato del video grabado en la BD
+                _this16.saveInfoVideoRecord(); // GUardamos los dato del video grabado en la BD
                 // OBS 2
 
 
@@ -7286,7 +7413,7 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
               case 21:
                 _context7.next = 23;
                 return obs2.send('SetFilenameFormatting', {
-                  'filename-formatting': "".concat(_this14.numeroExpediente, "-").concat(_this14.fechaCelebracionAudiencia)
+                  'filename-formatting': "".concat(_this16.numeroExpediente, "-").concat(_this16.fechaCelebracionAudiencia)
                 });
 
               case 23:
@@ -7304,7 +7431,7 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
                   Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Ocurrio un error al establecer en receso la audiencia, Intente de nuevo o pare la grabación desde OBS y recargue la página'
+                    text: 'Ocurrio un error al establecer en receso la audiencia, Intente de nuevo o detenga la grabación desde OBS y recargue la página'
                   });
                 }
 
@@ -7325,124 +7452,17 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
         }, _callee7, null, [[0, 28]]);
       }))();
     },
-    recesoRecord: function recesoRecord() {
-      var _this15 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee8() {
-        var token, config, res;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee8$(_context8) {
-          while (1) {
-            switch (_context8.prev = _context8.next) {
-              case 0:
-                _context8.prev = 0;
-                token = document.getElementsByName('_token');
-                config = {
-                  headers: {
-                    'content-type': 'application/x-www-form-urlencoded'
-                  },
-                  'X-CSRF-TOKEN': token[0].value // <--- aquí el token
-
-                };
-                _context8.next = 5;
-                return axios.put("".concat(baseURL, "/audiencia/expediente/pausar/").concat(_this15.expedienteID), config);
-
-              case 5:
-                res = _context8.sent;
-
-                if (!(res.data.status === 200)) {
-                  _context8.next = 25;
-                  break;
-                }
-
-                _context8.next = 9;
-                return obs.send('StopRecording');
-
-              case 9:
-                _this15.video.pause();
-
-                _this15.cronometrar = false; //Permite asignar el nombre del archivo
-
-                _context8.next = 13;
-                return obs.send('SetFilenameFormatting', {
-                  'filename-formatting': "".concat(_this15.numeroExpediente, "-").concat(_this15.fechaCelebracionAudiencia)
-                });
-
-              case 13:
-                //this.showFormFile = true; muestra el formualrio para subir el video grabado
-                //Controls
-                _this15.controls.showPlay = true;
-                _this15.controls.showPause = false;
-                _this15.controls.showResumen = false;
-                _this15.controls.showStop = false; // Alerta de exito
-
-                Swal.fire({
-                  position: 'top-end',
-                  icon: 'success',
-                  title: 'Audiencia en receso',
-                  showConfirmButton: false,
-                  timer: 1500
-                });
-
-                _this15.saveInfoVideoRecord(); // GUardamos los dato del video grabado en la BD
-                // OBS 2
-
-
-                _context8.next = 21;
-                return obs2.send('StopRecording');
-
-              case 21:
-                _context8.next = 23;
-                return obs2.send('SetFilenameFormatting', {
-                  'filename-formatting': "".concat(_this15.numeroExpediente, "-").concat(_this15.fechaCelebracionAudiencia)
-                });
-
-              case 23:
-                _context8.next = 26;
-                break;
-
-              case 25:
-                if (res.data.status === 404) {
-                  Swal.fire({
-                    icon: 'warning',
-                    title: 'Error',
-                    text: 'Ocurrio un error al establecer en receso la audiencia'
-                  });
-                } else if (res.data.status === 500) {
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Ocurrio un error al establecer en receso la audiencia, Intente de nuevo o detenga la grabación desde OBS y recargue la página'
-                  });
-                }
-
-              case 26:
-                _context8.next = 31;
-                break;
-
-              case 28:
-                _context8.prev = 28;
-                _context8.t0 = _context8["catch"](0);
-                console.log(_context8.t0);
-
-              case 31:
-              case "end":
-                return _context8.stop();
-            }
-          }
-        }, _callee8, null, [[0, 28]]);
-      }))();
-    },
     cronometro: function cronometro() {
-      var _this16 = this;
+      var _this17 = this;
 
       setInterval(function () {
         //let tiempo = document.getElementById("tiempo")
-        if (_this16.cronometrar) {
-          _this16.acumulado += Date.now() - _this16.tiempoRef;
+        if (_this17.cronometrar) {
+          _this17.acumulado += Date.now() - _this17.tiempoRef;
         }
 
-        _this16.tiempoRef = Date.now();
-        _this16.tiempo = formatearMS(_this16.acumulado);
+        _this17.tiempoRef = Date.now();
+        _this17.tiempo = formatearMS(_this17.acumulado);
       }, 1000 / 60);
 
       function formatearMS(tiempo_ms) {
@@ -7508,20 +7528,20 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
     //     }
     // },
     saveInfoVideoRecord: function saveInfoVideoRecord() {
-      var _this17 = this;
+      var _this18 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee9() {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee8() {
         var formData, token, config, res;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee9$(_context9) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee8$(_context8) {
           while (1) {
-            switch (_context9.prev = _context9.next) {
+            switch (_context8.prev = _context8.next) {
               case 0:
                 formData = {
-                  video: _this17.nameVideo,
-                  expediente_id: _this17.expedienteID,
-                  duracion: _this17.durationVideo,
-                  ubicacion: _this17.ubicationVideo,
-                  unidad: _this17.unidadDisk
+                  video: _this18.nameVideo,
+                  expediente_id: _this18.expedienteID,
+                  duracion: _this18.durationVideo,
+                  ubicacion: _this18.ubicationVideo,
+                  unidad: _this18.unidadDisk
                 }; //console.log(formData);
 
                 token = document.getElementsByName('_token');
@@ -7533,11 +7553,11 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
 
                 }; // Envio los datos al servidor
 
-                _context9.next = 5;
+                _context8.next = 5;
                 return axios.post("".concat(baseURL, "/evento/video"), formData, config);
 
               case 5:
-                res = _context9.sent;
+                res = _context8.sent;
 
                 if (res.data.status === 201) {
                   // Alerta de exito
@@ -7563,29 +7583,29 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
 
               case 8:
               case "end":
-                return _context9.stop();
+                return _context8.stop();
             }
           }
-        }, _callee9);
+        }, _callee8);
       }))();
     },
     getEstadoAudiencia: function getEstadoAudiencia() {
-      var _this18 = this;
+      var _this19 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee10() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee10$(_context10) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee9() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee9$(_context9) {
           while (1) {
-            switch (_context10.prev = _context10.next) {
+            switch (_context9.prev = _context9.next) {
               case 0:
-                _context10.next = 2;
-                return axios.get("".concat(baseURL, "/audiencia/expediente/estado/").concat(_this18.expedienteID)).then(function (response) {
+                _context9.next = 2;
+                return axios.get("".concat(baseURL, "/audiencia/expediente/estado/").concat(_this19.expedienteID)).then(function (response) {
                   return response.data;
                 }).then(function (estado) {
                   if (estado === 'Finalizada') {
-                    _this18.controls.showPlay = false;
+                    _this19.controls.showPlay = false;
                     Swal.fire({
                       icon: 'warning',
-                      title: 'Error',
+                      title: 'Audiencia finalizado',
                       text: 'La audiencia a finalizado, ya no puedes grabar.'
                     });
                   }
@@ -7594,17 +7614,17 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
 
               case 2:
               case "end":
-                return _context10.stop();
+                return _context9.stop();
             }
           }
-        }, _callee10);
+        }, _callee9);
       }))();
     }
   },
   mounted: function mounted() {
-    var _this19 = this;
+    var _this20 = this;
 
-    // this.launchModal(); // TODO: Descomentar para que se active el modal de cargando
+    this.launchModal();
     this.startVideoWebCam();
     this.listMediaDevices();
     this.cronometro(); // Obtner escena actual activo
@@ -7612,29 +7632,29 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
     obs.on('SwitchScenes', function (data) {
       // Espera en cambio de escnea
       // console.log(data);
-      _this19.activeSceneCurrent = data.sceneName;
+      _this20.activeSceneCurrent = data.sceneName;
     });
     obs.on('RecordingStopping', function (data) {
-      _this19.durationVideo = data.recTimecode;
-      _this19.ubicationVideo = data.recordingFilename; //console.log( data.recordingFilename);
+      _this20.durationVideo = data.recTimecode;
+      _this20.ubicationVideo = data.recordingFilename; //console.log( data.recordingFilename);
 
       var arrayName = data.recordingFilename.split('/'); // Separamos la ruta del video en un array
 
       arrayName.map(function (name) {
         if (name === arrayName[0]) {
-          _this19.unidadDisk = name;
+          _this20.unidadDisk = name;
         } // Recupera la unidad donde se guarda el video Ejempl en el disco  : 'D'
         // Si el utimo valor del array es igual al nombre asigamos al videoNombre el valor del ultimo
         // array,por defecto el ultimo valor del array es el nombre del video 
 
 
-        if (name === arrayName[arrayName.length - 1]) _this19.nameVideo = name;
+        if (name === arrayName[arrayName.length - 1]) _this20.nameVideo = name;
       });
     });
 
     navigator.mediaDevices.ondevicechange = function () {
       // se dispara mas de una vez al quitar o agregar un dispositivo
-      _this19.listMediaDevices();
+      _this20.listMediaDevices();
     };
   },
   beforeDestroy: function beforeDestroy() {
@@ -77758,16 +77778,56 @@ var render = function () {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm._m(0),
+    _c(
+      "button",
+      {
+        staticClass: "nav-link",
+        attrs: {
+          tabindex: "-1",
+          "aria-labelledby": "exampleModalLabel",
+          "aria-hidden": "true",
+          "data-bs-toggle": "modal",
+          "data-bs-target": "#exampleModal",
+          type: "button",
+          "aria-controls": "v-pills-archivos",
+          "aria-selected": "false",
+        },
+      },
+      [
+        _c(
+          "svg",
+          {
+            staticClass: "bi bi-hdd-fill",
+            attrs: {
+              xmlns: "http://www.w3.org/2000/svg",
+              width: "22",
+              height: "22",
+              fill: "currentColor",
+              viewBox: "0 0 16 16",
+            },
+          },
+          [
+            _c("path", {
+              attrs: {
+                d: "M0 10a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-1zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1zm2 0a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1zM.91 7.204A2.993 2.993 0 0 1 2 7h12c.384 0 .752.072 1.09.204l-1.867-3.422A1.5 1.5 0 0 0 11.906 3H4.094a1.5 1.5 0 0 0-1.317.782L.91 7.204z",
+              },
+            }),
+          ]
+        ),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v("Almacenamiento\n     "),
+      ]
+    ),
     _vm._v(" "),
     _c("div", { staticClass: "modal fade", attrs: { id: "exampleModal" } }, [
       _c("div", { staticClass: "modal-dialog modal-xl" }, [
         _c("div", { staticClass: "modal-content" }, [
-          _vm._m(1),
+          _vm._m(0),
           _vm._v(" "),
           _c("div", { staticClass: "modal-body" }, [
             _c("table", { staticClass: "table" }, [
-              _vm._m(2),
+              _vm._m(1),
               _vm._v(" "),
               _c(
                 "tbody",
@@ -77837,35 +77897,6 @@ var render = function () {
   ])
 }
 var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass: "nav-link",
-        attrs: {
-          tabindex: "-1",
-          "aria-labelledby": "exampleModalLabel",
-          "aria-hidden": "true",
-          "data-bs-toggle": "modal",
-          "data-bs-target": "#exampleModal",
-          type: "button",
-          "aria-controls": "v-pills-archivos",
-          "aria-selected": "false",
-        },
-      },
-      [
-        _c("span", {
-          staticClass: "iconify h4 me-1",
-          attrs: { "data-icon": "ic:baseline-storage" },
-        }),
-        _c("br"),
-        _vm._v("Almacenamiento\n     "),
-      ]
-    )
-  },
   function () {
     var _vm = this
     var _h = _vm.$createElement
@@ -79231,6 +79262,98 @@ var render = function () {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-5" }, [
+        _vm.alert.showAlert
+          ? _c(
+              "div",
+              { staticClass: "alert alert-warning", attrs: { role: "alert" } },
+              [
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "w-100 d-flex justify-content-between align-items-center",
+                  },
+                  [
+                    _c("div", [
+                      _c(
+                        "svg",
+                        {
+                          staticClass:
+                            "bi bi-exclamation-triangle-fill flex-shrink-0 me-2",
+                          attrs: {
+                            xmlns: "http://www.w3.org/2000/svg",
+                            width: "24",
+                            height: "24",
+                            fill: "currentColor",
+                            viewBox: "0 0 16 16",
+                            role: "img",
+                            "aria-label": "Warning:",
+                          },
+                        },
+                        [
+                          _c("path", {
+                            attrs: {
+                              d: "M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z",
+                            },
+                          }),
+                        ]
+                      ),
+                      _vm._v(
+                        "\n                        Fallo la conexión a OBS Externo\n                    "
+                      ),
+                    ]),
+                    _vm._v(" "),
+                    _c("button", {
+                      staticClass: "btn-close",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function ($event) {
+                          _vm.alert.showAlert = false
+                        },
+                      },
+                    }),
+                  ]
+                ),
+                _vm._v(" "),
+                _c("div", [
+                  _c("br"),
+                  _vm._v(" "),
+                  _vm.alert.typeAlert === "obsExternoNoActive"
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-sm btn-warning",
+                          attrs: { type: "button" },
+                          on: {
+                            click: function ($event) {
+                              return _vm.showMensajeConexionFaildOBSExterno()
+                            },
+                          },
+                        },
+                        [_vm._v("Ver mensaje")]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.alert.typeAlert === "obsExternoNoRecord"
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-sm btn-warning",
+                          attrs: { type: "button" },
+                          on: {
+                            click: function ($event) {
+                              return _vm.showMensajeConexionFailVideoRecordObsExterno()
+                            },
+                          },
+                        },
+                        [_vm._v("Ver mensaje")]
+                      )
+                    : _vm._e(),
+                ]),
+              ]
+            )
+          : _vm._e(),
+        _vm._v(" "),
         _vm.showFormFile
           ? _c("div", { staticClass: "border p-2 bg-light" }, [
               _c(

@@ -6887,8 +6887,7 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
     showMensajeConexionFaildOBSExterno: function showMensajeConexionFaildOBSExterno() {
       Swal.fire({
         icon: 'error',
-        title: 'No se pudo conectar a OBS externo',
-        text: 'No se pudo conectar a la aplicación de OBS, ya que no esta activa o la dirección IP es incorrecta para la conexión remota?'
+        text: 'No se pudo conectar a OBS, verifica que este activa o la dirección IP sea correcta.?'
       });
     },
     showMensajeConexionFailVideoRecordObsExterno: function showMensajeConexionFailVideoRecordObsExterno() {
@@ -79300,7 +79299,7 @@ var render = function () {
                         ]
                       ),
                       _vm._v(
-                        "\n                        Fallo una conexión\n                    "
+                        "\n                        Fallo la conexión a OBS Externo\n                    "
                       ),
                     ]),
                     _vm._v(" "),
