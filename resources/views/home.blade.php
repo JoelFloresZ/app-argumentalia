@@ -22,15 +22,15 @@
       <div class="col-6 mb-4">
          <div class="bg-white shadow p-3 rounded">
             <h5>
-               <span class="iconify h4" data-icon="uil:calender"></span>
+               <svg xmlns="http://www.w3.org/2000/svg" class="h4" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M19 4h-2V3a1 1 0 0 0-2 0v1H9V3a1 1 0 0 0-2 0v1H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm1 15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-7h16zm0-9H4V7a1 1 0 0 1 1-1h2v1a1 1 0 0 0 2 0V6h6v1a1 1 0 0 0 2 0V6h2a1 1 0 0 1 1 1z" fill="currentColor"/></svg>
                Audiencias programadas del día de hoy</h5>
             <hr>
-            @if (!count($audienciasCelebrandoseHoy) > 0)
-            <ul class="mt-3 list-group-items">
-               @foreach ($audienciasAgendadasHoy as $audiencia)
-                  <li> {{ $audiencia->tipoAudiencia->nombre }} - Hora de inicio: <b>{{  $audiencia->horaInicio }}</b> </li>
-               @endforeach
-            </ul>
+            @if (count($audienciasAgendadasHoy) > 0)
+               <ul class="mt-3 list-group-items">
+                  @foreach ($audienciasAgendadasHoy as $audiencia)
+                     <li> {{ $audiencia->tipoAudiencia->nombre }} - {{ $audiencia->expediente->numero_expediente }} - Hora de inicio: <b>{{  $audiencia->horaInicio }}</b> </li>
+                  @endforeach
+               </ul>
             @else
                <h3 class="fs-5 my-4">No hay audiencias programadas para el día de hoy</h3>   
             @endif
@@ -42,14 +42,14 @@
 
          <div class="bg-white shadow p-3 rounded">
             <h5>
-               <span class="iconify h4" data-icon="uil:calender"></span>
+               <svg xmlns="http://www.w3.org/2000/svg" class="h4" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M19 4h-2V3a1 1 0 0 0-2 0v1H9V3a1 1 0 0 0-2 0v1H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm1 15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-7h16zm0-9H4V7a1 1 0 0 1 1-1h2v1a1 1 0 0 0 2 0V6h6v1a1 1 0 0 0 2 0V6h2a1 1 0 0 1 1 1z" fill="currentColor"/></svg>
                Audiencias celebrándose</h5>
             <hr>
 
-            @if (!count($audienciasCelebrandoseHoy) > 0)
+            @if (count($audienciasCelebrandoseHoy) > 0)
                <ul class="mt-3 list-group-items">
                   @foreach ($audienciasCelebrandoseHoy as $audiencia)
-                     <li> {{ $audiencia->tipoAudiencia->nombre }} - Hora de inicio: <b>{{  $audiencia->horaInicio }}</b> </li>
+                     <li> {{ $audiencia->tipoAudiencia->nombre }} - {{ $audiencia->expediente->numero_expediente }} - Hora de inicio: <b>{{  $audiencia->horaInicio }}</b> </li>
                   @endforeach
                </ul>
             @else
@@ -64,14 +64,14 @@
 
          <div class="bg-white shadow p-3 rounded">
             <h5>
-               <span class="iconify h4" data-icon="uil:calender"></span>
+               <svg xmlns="http://www.w3.org/2000/svg" class="h4" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M19 4h-2V3a1 1 0 0 0-2 0v1H9V3a1 1 0 0 0-2 0v1H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm1 15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-7h16zm0-9H4V7a1 1 0 0 1 1-1h2v1a1 1 0 0 0 2 0V6h6v1a1 1 0 0 0 2 0V6h2a1 1 0 0 1 1 1z" fill="currentColor"/></svg>
                Audiencias finalizadas del día de hoy</h5>
             <hr>
 
             @if (count($audienciasFinalizadasHoy) > 0)
                <ul class="mt-3 list-group-items">
                   @foreach ($audienciasFinalizadasHoy as $audiencia)
-                     <li> {{ $audiencia->tipoAudiencia->nombre }} - Hora de inicio: <b>{{  $audiencia->horaInicio }}</b> </li>
+                     <li> {{ $audiencia->tipoAudiencia->nombre }} - {{ $audiencia->expediente->numero_expediente }} - Hora de inicio: <b>{{  $audiencia->horaInicio }}</b> </li>
                   @endforeach
                </ul>
             @else

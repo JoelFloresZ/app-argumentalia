@@ -5328,6 +5328,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 //var diskinfo = require('diskinfo')
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -77776,16 +77779,56 @@ var render = function () {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm._m(0),
+    _c(
+      "button",
+      {
+        staticClass: "nav-link",
+        attrs: {
+          tabindex: "-1",
+          "aria-labelledby": "exampleModalLabel",
+          "aria-hidden": "true",
+          "data-bs-toggle": "modal",
+          "data-bs-target": "#exampleModal",
+          type: "button",
+          "aria-controls": "v-pills-archivos",
+          "aria-selected": "false",
+        },
+      },
+      [
+        _c(
+          "svg",
+          {
+            staticClass: "bi bi-hdd-fill",
+            attrs: {
+              xmlns: "http://www.w3.org/2000/svg",
+              width: "22",
+              height: "22",
+              fill: "currentColor",
+              viewBox: "0 0 16 16",
+            },
+          },
+          [
+            _c("path", {
+              attrs: {
+                d: "M0 10a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-1zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1zm2 0a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1zM.91 7.204A2.993 2.993 0 0 1 2 7h12c.384 0 .752.072 1.09.204l-1.867-3.422A1.5 1.5 0 0 0 11.906 3H4.094a1.5 1.5 0 0 0-1.317.782L.91 7.204z",
+              },
+            }),
+          ]
+        ),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v("Almacenamiento\n     "),
+      ]
+    ),
     _vm._v(" "),
     _c("div", { staticClass: "modal fade", attrs: { id: "exampleModal" } }, [
       _c("div", { staticClass: "modal-dialog modal-xl" }, [
         _c("div", { staticClass: "modal-content" }, [
-          _vm._m(1),
+          _vm._m(0),
           _vm._v(" "),
           _c("div", { staticClass: "modal-body" }, [
             _c("table", { staticClass: "table" }, [
-              _vm._m(2),
+              _vm._m(1),
               _vm._v(" "),
               _c(
                 "tbody",
@@ -77855,35 +77898,6 @@ var render = function () {
   ])
 }
 var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass: "nav-link",
-        attrs: {
-          tabindex: "-1",
-          "aria-labelledby": "exampleModalLabel",
-          "aria-hidden": "true",
-          "data-bs-toggle": "modal",
-          "data-bs-target": "#exampleModal",
-          type: "button",
-          "aria-controls": "v-pills-archivos",
-          "aria-selected": "false",
-        },
-      },
-      [
-        _c("span", {
-          staticClass: "iconify h4 me-1",
-          attrs: { "data-icon": "ic:baseline-storage" },
-        }),
-        _c("br"),
-        _vm._v("Almacenamiento\n     "),
-      ]
-    )
-  },
   function () {
     var _vm = this
     var _h = _vm.$createElement
