@@ -6622,6 +6622,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 // OBS 
 
 
@@ -79124,7 +79128,18 @@ var render = function () {
   return _c("div", { staticClass: "container-fluid" }, [
     _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-7" }, [
-        _c("h5", [_vm._v("Dispositivos de video conectados")]),
+        _c("h5", [
+          _vm._v("Dispositivos de video conectados \n                "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-dark me-2",
+              attrs: { type: "button" },
+              on: { click: _vm.startVideoWebCam },
+            },
+            [_vm._v("\n                    Recargar video\n                ")]
+          ),
+        ]),
         _vm._v(" "),
         _c(
           "div",

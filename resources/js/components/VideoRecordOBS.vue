@@ -5,7 +5,11 @@
             <!-- Panel de la grabación -->
             <div class="col-7">
                 <!-- Lista de camaras activadas Camaras -->
-                <h5>Dispositivos de video conectados</h5>
+                <h5>Dispositivos de video conectados 
+                    <button type="button" class="btn btn-dark me-2" @click="startVideoWebCam">
+                        Recargar video
+                    </button>
+                </h5>
                 <div class="mb-2 d-flex flex-nowrap">
                     <button class="btn btn-sm btn-outline-primary me-1 mb-1" v-for="(video, i) in videoSourcesSelect" 
                     :key="video.deviceId" @click="changeSceneAndCamera(video, scenes[i])" >
