@@ -6711,7 +6711,9 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
       alert: {
         showAlert: false,
         typeAlert: null
-      }
+      },
+      audioOBSMutedDesktop: false,
+      audioOBSMutedMicAux: false
     };
   },
   created: function created() {
@@ -6850,8 +6852,8 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
 
         obs.send('SetFilenameFormatting', {
           'filename-formatting': "".concat(_this4.numeroExpediente, "-").concat(_this4.fechaCelebracionAudiencia)
-        });
-        obs.send('OpenProjector');
+        }); //obs.send('SetVolume', {'source': 'hd60'}).then(data => console.log(data)).catch(err => console.log(err))
+        //obs.send('GetAudioMonitorType', {'sourceName': 'Captura de pantalla'})
       })["catch"](function (err) {
         // Promise convention dicates you have a catch on every chain.
         // console.log(err);
@@ -6956,18 +6958,28 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
       }
 
       navigator.mediaDevices.enumerateDevices().then(function (devices) {
+        //console.log(devices);
         // Valida si el videoSourcesSelect ya tiene datos entonces ya no seguimmos
         if (_this6.videoSourcesSelect.length > 1) {
           return;
         } // Iterar sobre toda la lista de dispositivos (InputDeviceInfo y MediaDeviceInfo) 
 
 
+        var count = 1; // cuenta el numero de camaras a mostrar
+
         devices.forEach(function (device) {
           // Según el tipo de dispositivo multimedia
           if (device.kind === "videoinput") {
             // Agregar dispositivo a la lista de cámaras
             if (device.label !== 'OBS Virtual Camera') {
+              if (count > 2) {
+                // Valida que solo se agreguen dos camaras 
+                return;
+              }
+
               _this6.videoSourcesSelect.push(device);
+
+              count++;
             } // Agregar dispositivo a la lista de micrófonos
 
           } else if (device.kind === "audioinput") {
@@ -7634,6 +7646,10 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
       // console.log(data);
       _this20.activeSceneCurrent = data.sceneName;
     });
+    /*  obs.on('SourceVolumeChanged', data => {
+         console.log(data);
+     }) */
+
     obs.on('RecordingStopping', function (data) {
       _this20.durationVideo = data.recTimecode;
       _this20.ubicationVideo = data.recordingFilename; //console.log( data.recordingFilename);
@@ -79179,8 +79195,8 @@ var render = function () {
               [
                 _vm._v(
                   "\n                    Camara - " +
-                    _vm._s(video.label) +
-                    "\n                "
+                    _vm._s(_vm.scenes[i] ? _vm.scenes[i].name : "") +
+                    " "
                 ),
               ]
             )

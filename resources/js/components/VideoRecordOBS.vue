@@ -10,7 +10,7 @@
                 <div class="mb-2 d-flex flex-nowrap">
                     <button class="btn btn-sm btn-outline-primary me-1 mb-1" v-for="(video, i) in videoSourcesSelect" 
                     :key="video.deviceId" @click="changeSceneAndCamera(video, scenes[i])" >
-                        Camara - {{ video.label }}
+                        Camara - {{ scenes[i] ? scenes[i].name : '' }} <!-- video.label -->
                     </button>
                 </div>  
 
@@ -156,7 +156,9 @@ export default {
             alert: {
                 showAlert: false,
                 typeAlert: null
-            }
+            },
+            audioOBSMutedDesktop: false,
+            audioOBSMutedMicAux: false,
         }
     
     },
@@ -210,7 +212,6 @@ export default {
                 console.log(error);
             })
         },
-
     
         // Obtener video de la WebCam
         async startVideoWebCam() {
@@ -247,7 +248,8 @@ export default {
                 this.modal.hide();
                 //Permite asignar el nombre del archivo
                 obs.send('SetFilenameFormatting', { 'filename-formatting': `${this.numeroExpediente}-${this.fechaCelebracionAudiencia}` })
-                obs.send('OpenProjector')
+                //obs.send('SetVolume', {'source': 'hd60'}).then(data => console.log(data)).catch(err => console.log(err))
+                //obs.send('GetAudioMonitorType', {'sourceName': 'Captura de pantalla'})
             })
             .catch(err => { // Promise convention dicates you have a catch on every chain.
                 // console.log(err);
@@ -339,21 +341,30 @@ export default {
                 console.log("enumerateDevices() not supported.");
                 return;
             }
-
+    
             navigator.mediaDevices.enumerateDevices().then((devices) => {
+
+                //console.log(devices);
               
                 // Valida si el videoSourcesSelect ya tiene datos entonces ya no seguimmos
                 if(this.videoSourcesSelect.length > 1) {
                     return;
                 }        
                 // Iterar sobre toda la lista de dispositivos (InputDeviceInfo y MediaDeviceInfo) 
+                let count = 1 // cuenta el numero de camaras a mostrar
                 devices.forEach((device) => {
                     // Según el tipo de dispositivo multimedia
                     if(device.kind ===  "videoinput"){
                         // Agregar dispositivo a la lista de cámaras
                         if(device.label !== 'OBS Virtual Camera') {
+                            if(count > 2) { // Valida que solo se agreguen dos camaras 
+                                return
+                            }
                             this.videoSourcesSelect.push(device)
+                            count++
                         }
+
+                         
                         // Agregar dispositivo a la lista de micrófonos
                     } else if(device.kind ===  "audioinput") {
                         this.audioSourcesSelect.push(device)
@@ -854,6 +865,10 @@ export default {
             // console.log(data);
             this.activeSceneCurrent = data.sceneName
         });
+
+       /*  obs.on('SourceVolumeChanged', data => {
+            console.log(data);
+        }) */
         
         obs.on('RecordingStopping', data => {
                this.durationVideo   = data.recTimecode;
