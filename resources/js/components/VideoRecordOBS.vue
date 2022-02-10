@@ -9,8 +9,10 @@
                 </h5>
                 <div class="mb-2 d-flex flex-nowrap">
                     <button class="btn btn-sm btn-outline-primary me-1 mb-1" v-for="(video, i) in videoSourcesSelect" 
-                    :key="video.deviceId" @click="changeSceneAndCamera(video, scenes[i])" >
-                        Camara - {{ scenes[i] ? scenes[i].name : '' }} <!-- video.label -->
+                    :key="video.deviceId" 
+                    @click="changeSceneAndCamera(video, scenes[i], i)" 
+                    :class="btnActives[i]">
+                        Camara - {{ scenes[i] ? scenes[i].name : video.label }} <!-- video.label -->
                     </button>
                 </div>  
 
@@ -159,6 +161,7 @@ export default {
             },
             audioOBSMutedDesktop: false,
             audioOBSMutedMicAux: false,
+            btnActives: ['active','','','','',''] // permite activar los botones de video
         }
     
     },
@@ -302,24 +305,32 @@ export default {
             obs.send('SetCurrentScene', {'scene-name': 'HD60-PRO'}).catch( err => console.log(err)) 
         },
 
-        changeSceneAndCamera(video, scene) {
+        changeSceneAndCamera(video, scene,indice) {
             // console.log(this.videoSourceId);
             if(this.scenes.length > 0) {
+                
+                for (let index = 0; index < this.btnActives.length; index++) {
+                     this.btnActives[index] = '';  
+                }
+
                 switch (scene.name) {
                     case 'HD60-S': // TODO: cambiar por el bnombre de la capturadora
                         this.videoSourceId = video.deviceId
                         this.startVideoWebCam()
                         this.changeSceneHD60_S()
+                        this.btnActives.splice(indice, 1, 'active');
                         break;
                     
                     case 'HD60-PRO': // TODO: cambiar por el bnombre de la capturadora
                         this.videoSourceId = video.deviceId
                         this.startVideoWebCam()
                         this.changeSceneHD60_Pro()
+                        this.btnActives.splice(indice, 1, 'active');
                         break;
                     case 'OBS Virtual Camera':
                         this.videoSourceId = video.deviceId
                         this.startVideoWebCam()
+                        this.btnActives.splice(indice, 1, 'active');
                         // this.changeSceneHD60_S()
                         break;
 
