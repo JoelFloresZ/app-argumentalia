@@ -251,8 +251,8 @@ export default {
                 this.modal.hide();
                 //Permite asignar el nombre del archivo
                 obs.send('SetFilenameFormatting', { 'filename-formatting': `${this.numeroExpediente}-${this.fechaCelebracionAudiencia}` })
-                //obs.send('SetVolume', {'source': 'hd60'}).then(data => console.log(data)).catch(err => console.log(err))
-                //obs.send('GetAudioMonitorType', {'sourceName': 'Captura de pantalla'})
+                //obs.send('SetVolume', {source: 'audio', volume: 1}).then(data => console.log(data)).catch(err => console.log(err))
+                obs.send('OpenProjector')
             })
             .catch(err => { // Promise convention dicates you have a catch on every chain.
                 // console.log(err);
@@ -877,9 +877,9 @@ export default {
             this.activeSceneCurrent = data.sceneName
         });
 
-       /*  obs.on('SourceVolumeChanged', data => {
-            console.log(data);
-        }) */
+        obs.on('SourceVolumeChanged', data => {
+           console.log(data);
+        })
         
         obs.on('RecordingStopping', data => {
                this.durationVideo   = data.recTimecode;

@@ -6856,8 +6856,9 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
 
         obs.send('SetFilenameFormatting', {
           'filename-formatting': "".concat(_this4.numeroExpediente, "-").concat(_this4.fechaCelebracionAudiencia)
-        }); //obs.send('SetVolume', {'source': 'hd60'}).then(data => console.log(data)).catch(err => console.log(err))
-        //obs.send('GetAudioMonitorType', {'sourceName': 'Captura de pantalla'})
+        }); //obs.send('SetVolume', {source: 'audio', volume: 1}).then(data => console.log(data)).catch(err => console.log(err))
+
+        obs.send('OpenProjector');
       })["catch"](function (err) {
         // Promise convention dicates you have a catch on every chain.
         // console.log(err);
@@ -7657,10 +7658,9 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
       // console.log(data);
       _this20.activeSceneCurrent = data.sceneName;
     });
-    /*  obs.on('SourceVolumeChanged', data => {
-         console.log(data);
-     }) */
-
+    obs.on('SourceVolumeChanged', function (data) {
+      console.log(data);
+    });
     obs.on('RecordingStopping', function (data) {
       _this20.durationVideo = data.recTimecode;
       _this20.ubicationVideo = data.recordingFilename; //console.log( data.recordingFilename);
