@@ -6648,6 +6648,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 // OBS 
 
 
@@ -6711,7 +6712,9 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
       alert: {
         showAlert: false,
         typeAlert: null
-      }
+      },
+      btnActives: ['active', '', '', '', '', ''] // permite activar los botones de video
+
     };
   },
   created: function created() {
@@ -6911,15 +6914,20 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
         return console.log(err);
       });
     },
-    changeSceneAndCamera: function changeSceneAndCamera(video, scene) {
+    changeSceneAndCamera: function changeSceneAndCamera(video, scene, indice) {
       // console.log(this.videoSourceId);
       if (this.scenes.length > 0) {
+        for (var index = 0; index < this.btnActives.length; index++) {
+          this.btnActives[index] = '';
+        }
+
         switch (scene.name) {
           case 'HD60-S':
             // TODO: cambiar por el bnombre de la capturadora
             this.videoSourceId = video.deviceId;
             this.startVideoWebCam();
             this.changeSceneHD60_S();
+            this.btnActives.splice(indice, 1, 'active');
             break;
 
           case 'HD60-PRO':
@@ -6927,11 +6935,13 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
             this.videoSourceId = video.deviceId;
             this.startVideoWebCam();
             this.changeSceneHD60_Pro();
+            this.btnActives.splice(indice, 1, 'active');
             break;
 
           case 'OBS Virtual Camera':
             this.videoSourceId = video.deviceId;
-            this.startVideoWebCam(); // this.changeSceneHD60_S()
+            this.startVideoWebCam();
+            this.btnActives.splice(indice, 1, 'active'); // this.changeSceneHD60_S()
 
             break;
 
@@ -79170,9 +79180,10 @@ var render = function () {
               {
                 key: video.deviceId,
                 staticClass: "btn btn-sm btn-outline-primary me-1 mb-1",
+                class: _vm.btnActives[i],
                 on: {
                   click: function ($event) {
-                    return _vm.changeSceneAndCamera(video, _vm.scenes[i])
+                    return _vm.changeSceneAndCamera(video, _vm.scenes[i], i)
                   },
                 },
               },
