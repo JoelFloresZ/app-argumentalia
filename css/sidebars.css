@@ -47,8 +47,8 @@ main {
 }
 .btn-toggle:hover,
 .btn-toggle:focus {
-  color: rgba(52, 7, 7, 0.85);
-  background-color: #77241c;
+  color: rgba(0, 0, 0, .85);
+  background-color: #707070;
 }
 
 .btn-toggle::before {
@@ -60,7 +60,7 @@ main {
 }
 
 .btn-toggle[aria-expanded="true"] {
-  color: rgba(249, 249, 249, 0.85);
+  color: rgba(0, 0, 0, .85);
 }
 .btn-toggle[aria-expanded="true"]::before {
   transform: rotate(90deg);
@@ -73,11 +73,9 @@ main {
   margin-left: 1.25rem;
   text-decoration: none;
 }
-
 .btn-toggle-nav a:hover,
 .btn-toggle-nav a:focus {
-  background-color: #dadada;
-  color: #77241c;
+  background-color: #545454;
 }
 
 .scrollarea {
