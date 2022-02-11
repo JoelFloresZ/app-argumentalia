@@ -365,7 +365,7 @@ class ReservaSalaController extends Controller
             if($newPersonal->save()) {
 
                 $asistencia  = new AsistenciaPersonalAudiencia;
-                $asistencia->asistencia = 'resgistrado';
+                $asistencia->asistencia = 'registrado';
                 $asistencia->color = 'bg-dark';
                 $asistencia->personal_id = $newPersonal->id;
 
@@ -384,7 +384,7 @@ class ReservaSalaController extends Controller
             if($newPersonal->save()) {
 
                 $asistencia  = new AsistenciaPersonalAudiencia;
-                $asistencia->asistencia = 'resgistrado';
+                $asistencia->asistencia = 'registrado';
                 $asistencia->color = 'bg-dark';
                 $asistencia->personal_id = $newPersonal->id;
 
@@ -403,7 +403,7 @@ class ReservaSalaController extends Controller
             if($newPersonal->save()) {
 
                 $asistencia  = new AsistenciaPersonalAudiencia;
-                $asistencia->asistencia = 'resgistrado';
+                $asistencia->asistencia = 'registrado';
                 $asistencia->color = 'bg-dark';
                 $asistencia->personal_id = $newPersonal->id;
 
@@ -421,7 +421,7 @@ class ReservaSalaController extends Controller
             if($newPersonal->save()) {
 
                 $asistencia  = new AsistenciaPersonalAudiencia;
-                $asistencia->asistencia = 'resgistrado';
+                $asistencia->asistencia = 'registrado';
                 $asistencia->color = 'bg-dark';
                 $asistencia->personal_id = $newPersonal->id;
 
@@ -439,7 +439,7 @@ class ReservaSalaController extends Controller
             if($newPersonal->save()) {
 
                 $asistencia  = new AsistenciaPersonalAudiencia;
-                $asistencia->asistencia = 'resgistrado';
+                $asistencia->asistencia = 'registrado';
                 $asistencia->color = 'bg-dark';
                 $asistencia->personal_id = $newPersonal->id;
 

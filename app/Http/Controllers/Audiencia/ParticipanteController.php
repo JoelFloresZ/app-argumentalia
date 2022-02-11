@@ -81,7 +81,7 @@ class ParticipanteController extends Controller
                 if($newParticipante) {
 
                     $asistencia  = new AsistenciaModel;
-                    $asistencia->asistencia = 'resgistrado';
+                    $asistencia->asistencia = 'registrado';
                     $asistencia->color = 'bg-dark';
                     $asistencia->participante_id = $newParticipante->id;
 
