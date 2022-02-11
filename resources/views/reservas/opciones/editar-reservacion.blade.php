@@ -24,7 +24,7 @@
             <div class="row">
                 <div class="col-3">
                     <div class="mb-3">
-                        <label class="form-label">Numero de Expediente:</label>
+                        <label class="form-label">Numero de expediente:</label>
                         <input type="text" class="form-control" value="{{ $expediente->numero_expediente}}" disabled>
                     </div>
                 </div>

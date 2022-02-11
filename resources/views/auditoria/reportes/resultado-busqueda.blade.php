@@ -17,7 +17,7 @@
             <table class="table table-responsive table-bordered table-hover">
                 <thead class="table-primary">
                     <tr>
-                        <td>Núm. Expediente</td>
+                        <td>Núm. expediente</td>
                         <td>Folio</td>
                         <td>Tipo de audiencia</td>
                         <td>Sala</td>
@@ -42,7 +42,7 @@
             @endisset 
         @else
             <div class="d-flex justify-content-center align-items-center">
-                <h3 class="fs-5">No se encontro ningún resultado de la busqueda...</h3>
+                <h3 class="fs-5">No se encontro ningún resultado de busqueda...</h3>
             </div>
         @endif 
     </div>  
