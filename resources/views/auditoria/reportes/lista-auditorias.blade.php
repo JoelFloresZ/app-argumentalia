@@ -28,7 +28,7 @@
         <table class="table table-responsive table-bordered table-hover">
             <thead class="table-primary">
                 <tr>
-                    <td>Núm. Expediente</td>
+                    <td>Núm. expediente</td>
                     <td>Folio</td>
                     <td>Tipo de audiencia</td>
                     <td>Sala</td>

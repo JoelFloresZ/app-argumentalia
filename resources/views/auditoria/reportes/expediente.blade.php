@@ -19,7 +19,7 @@
         <table class="table w-50 table-responsive">
             <thead class="table-dark">
                 <tr>
-                    <td>Número de Expediente</td>
+                    <td>Número de expediente</td>
                     <td>Folio</td>
                 </tr>
             </thead>
@@ -36,9 +36,9 @@
         <table class="table w-100 table-responsive">
             <thead class="table-dark">
                 <tr>
-                    <td>Centro de Justicia</td>
+                    <td>Centro de justicia</td>
                     <td>Sala</td>
-                    <td>Tipo de Audiencia</td>
+                    <td>Tipo de audiencia</td>
                     <td>Tipo de juicio</td>
                 </tr>
             </thead>
@@ -58,7 +58,7 @@
             <thead class="table-dark">
                 <tr>
                     <td>Fecha de celebración</td>
-                    <td>Hora Inicio</td>
+                    <td>Hora inicio</td>
                     <td>Hora de finalización</td>
                 </tr>
             </thead>
@@ -120,7 +120,7 @@
                 </tbody>
             </table>
         @else
-            <p class="text-center text-dark p-2">No hubo participantes a la audiencia</p>
+            <p class="text-center text-dark p-2">No hay participantes a la audiencia</p>
         @endif
        
 
