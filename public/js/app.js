@@ -6649,6 +6649,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 // OBS 
 
 
@@ -6713,8 +6725,11 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
         showAlert: false,
         typeAlert: null
       },
-      btnActives: ['active', '', '', '', '', ''] // permite activar los botones de video
-
+      btnActives: ['active', '', '', '', '', ''],
+      // permite activar los botones de video
+      audio: {
+        mutedDeskAudio: false
+      }
     };
   },
   created: function created() {
@@ -6854,7 +6869,15 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
         obs.send('SetFilenameFormatting', {
           'filename-formatting': "".concat(_this4.numeroExpediente, "-").concat(_this4.fechaCelebracionAudiencia)
         });
-        obs.send('OpenProjector');
+        obs.send('OpenProjector'); // Obre un proyecto de obs
+        // Obtiene el estado del audio del escritorio (Muted)
+
+        obs.send('SetMute', {
+          source: 'Audio del escritorio',
+          mute: true
+        })["catch"](function (err) {
+          return console.log(err);
+        });
       })["catch"](function (err) {
         // Promise convention dicates you have a catch on every chain.
         // console.log(err);
@@ -7629,6 +7652,13 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
           }
         }, _callee9);
       }))();
+    },
+    mutedAudieDessk: function mutedAudieDessk() {
+      obs.send('ToggleMute', {
+        source: 'Audio del escritorio'
+      })["catch"](function (err) {
+        return console.log(err);
+      });
     }
   },
   mounted: function mounted() {
@@ -7643,6 +7673,11 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
       // Espera en cambio de escnea
       // console.log(data);
       _this20.activeSceneCurrent = data.sceneName;
+    });
+    obs.on('SourceMuteStateChanged', function (data) {
+      // Espera en cambio de escnea
+      //console.log(data);
+      _this20.audio.mutedDeskAudio = data.muted;
     });
     obs.on('RecordingStopping', function (data) {
       _this20.durationVideo = data.recTimecode;
@@ -79211,65 +79246,231 @@ var render = function () {
           ]),
         ]),
         _vm._v(" "),
-        _c("video", {
-          staticClass: "w-75 shadow border overflow-hidden bg-dark",
-          attrs: { autoplay: "", muted: "", id: "video-record", height: "50%" },
-          domProps: { muted: true },
-        }),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "mt-2 w-75 d-flex justify-content-center border p-2" },
-          [
-            _vm.controls.showPlay
-              ? _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-primary me-2",
-                    attrs: { type: "button" },
-                    on: { click: _vm.showConfirmRecordStart },
-                  },
-                  [_vm._v("\n                    Grabar\n                ")]
-                )
-              : _vm._e(),
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-8" }, [
+            _c("video", {
+              staticClass: "w-100 shadow border overflow-hidden bg-dark",
+              attrs: {
+                autoplay: "",
+                muted: "",
+                id: "video-record",
+                height: "50%",
+              },
+              domProps: { muted: true },
+            }),
             _vm._v(" "),
-            _vm.controls.showPause
-              ? _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-outline-dark me-2",
-                    attrs: { type: "button" },
-                    on: { click: _vm.showConfirmRecesoRecord },
+            _c(
+              "div",
+              {
+                staticClass:
+                  "mt-2 w-100 d-flex justify-content-center border p-2",
+              },
+              [
+                _vm.controls.showPlay
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary me-2",
+                        attrs: { type: "button" },
+                        on: { click: _vm.showConfirmRecordStart },
+                      },
+                      [
+                        _vm._v(
+                          "\n                            Grabar\n                        "
+                        ),
+                      ]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.controls.showPause
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-outline-dark me-2",
+                        attrs: { type: "button" },
+                        on: { click: _vm.showConfirmRecesoRecord },
+                      },
+                      [
+                        _vm._v(
+                          "\n                            Pausar\n                        "
+                        ),
+                      ]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.controls.showResumen
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-outline-dark me-2",
+                        attrs: { type: "button" },
+                        on: { click: _vm.showConfirmResumenRecord },
+                      },
+                      [
+                        _vm._v(
+                          "\n                            Reanudar\n                        "
+                        ),
+                      ]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.controls.showStop
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-outline-danger",
+                        attrs: { type: "button" },
+                        on: { click: _vm.showConfirmStopRecord },
+                      },
+                      [
+                        _vm._v(
+                          "\n                            Finalizar\n                        "
+                        ),
+                      ]
+                    )
+                  : _vm._e(),
+              ]
+            ),
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-1" }, [
+            _c(
+              "button",
+              {
+                staticClass:
+                  "btn btn-sm btn-light rounded-circle d-flex justify-content-center align-content-center",
+                attrs: {
+                  type: "button",
+                  title: "Activar / Desactiva el audio del escritorio",
+                },
+                on: {
+                  click: function ($event) {
+                    return _vm.mutedAudieDessk()
                   },
-                  [_vm._v("\n                    Pausar\n                ")]
-                )
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.controls.showResumen
-              ? _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-outline-dark me-2",
-                    attrs: { type: "button" },
-                    on: { click: _vm.showConfirmResumenRecord },
-                  },
-                  [_vm._v("\n                    Reanudar\n                ")]
-                )
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.controls.showStop
-              ? _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-outline-danger",
-                    attrs: { type: "button" },
-                    on: { click: _vm.showConfirmStopRecord },
-                  },
-                  [_vm._v("\n                    Finalizar\n                ")]
-                )
-              : _vm._e(),
-          ]
-        ),
+                },
+              },
+              [
+                !_vm.audio.mutedDeskAudio
+                  ? _c(
+                      "svg",
+                      {
+                        staticClass: "h4 mx-0 my-1",
+                        attrs: {
+                          title: "Activar el audio del escritorio",
+                          xmlns: "http://www.w3.org/2000/svg",
+                          "aria-hidden": "true",
+                          role: "img",
+                          width: "1em",
+                          height: "1em",
+                          preserveAspectRatio: "xMidYMid meet",
+                          viewBox: "0 0 48 48",
+                        },
+                      },
+                      [
+                        _c(
+                          "g",
+                          {
+                            attrs: {
+                              fill: "none",
+                              stroke: "currentColor",
+                              "stroke-width": "4",
+                              "stroke-linejoin": "round",
+                            },
+                          },
+                          [
+                            _c("rect", {
+                              attrs: {
+                                x: "17",
+                                y: "4",
+                                width: "14",
+                                height: "27",
+                                rx: "7",
+                              },
+                            }),
+                            _c("path", {
+                              attrs: {
+                                d: "M9 23c0 8.284 6.716 15 15 15c8.284 0 15-6.716 15-15",
+                                "stroke-linecap": "round",
+                              },
+                            }),
+                            _c("path", {
+                              attrs: {
+                                d: "M24 38v6",
+                                "stroke-linecap": "round",
+                              },
+                            }),
+                          ]
+                        ),
+                      ]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.audio.mutedDeskAudio
+                  ? _c(
+                      "svg",
+                      {
+                        staticClass: "h4 mx-0 my-1",
+                        attrs: {
+                          title: "Desactivar el audio del escritorio",
+                          xmlns: "http://www.w3.org/2000/svg",
+                          "aria-hidden": "true",
+                          role: "img",
+                          width: "1em",
+                          height: "1em",
+                          preserveAspectRatio: "xMidYMid meet",
+                          viewBox: "0 0 48 48",
+                        },
+                      },
+                      [
+                        _c(
+                          "g",
+                          {
+                            attrs: {
+                              fill: "none",
+                              stroke: "currentColor",
+                              "stroke-width": "4",
+                              "stroke-linejoin": "round",
+                            },
+                          },
+                          [
+                            _c("path", {
+                              attrs: {
+                                d: "M31 24V11a7 7 0 1 0-14 0v13a7 7 0 1 0 14 0z",
+                              },
+                            }),
+                            _c("path", {
+                              attrs: {
+                                d: "M39 23a14.95 14.95 0 0 1-1.248 6",
+                                "stroke-linecap": "round",
+                              },
+                            }),
+                            _c("path", {
+                              attrs: {
+                                d: "M9 23c0 8.284 6.716 15 15 15c1.753 0 3.436-.3 5-.853",
+                                "stroke-linecap": "round",
+                              },
+                            }),
+                            _c("path", {
+                              attrs: {
+                                d: "M24 38v6",
+                                "stroke-linecap": "round",
+                              },
+                            }),
+                            _c("path", {
+                              attrs: {
+                                d: "M42 42L6 6",
+                                "stroke-linecap": "round",
+                              },
+                            }),
+                          ]
+                        ),
+                      ]
+                    )
+                  : _vm._e(),
+              ]
+            ),
+          ]),
+        ]),
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-5" }, [
