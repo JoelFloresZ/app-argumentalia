@@ -120,7 +120,7 @@
                 </tbody>
             </table>
         @else
-            <p class="text-center text-dark p-2">No hubo participantes a la audiencia</p>
+            <p class="text-center text-dark p-2">No hay participantes a la audiencia</p>
         @endif
        
 
