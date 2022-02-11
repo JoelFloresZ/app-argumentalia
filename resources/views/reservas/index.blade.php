@@ -37,9 +37,9 @@
                 <tr>
                     <th scope="col">Número de expediente</th>
                     <th scope="col">Folio</th>
-                    <th scope="col">Hora de Inicio</th>
+                    <th scope="col">Hora de inicio</th>
                     <th scope="col">Fin de la audiencia</th>
-                    <th scope="col">Tipo de Audiencia</th>
+                    <th scope="col">Tipo de audiencia</th>
                     <th scope="col">Sala</th>
                     <th scope="col">Estado</th>
                     <th class="text-center" scope="col"></th>

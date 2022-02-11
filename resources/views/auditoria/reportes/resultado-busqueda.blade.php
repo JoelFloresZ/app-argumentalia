@@ -42,7 +42,7 @@
             @endisset 
         @else
             <div class="d-flex justify-content-center align-items-center">
-                <h3 class="fs-5">No se encontro ningún resultado de la busqueda...</h3>
+                <h3 class="fs-5">No se encontro ningún resultado de busqueda...</h3>
             </div>
         @endif 
     </div>  

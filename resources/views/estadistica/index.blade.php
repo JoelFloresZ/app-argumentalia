@@ -14,7 +14,7 @@
             
                 <h5>
                     <span class="iconify h4" data-icon="uil:calender"></span>
-                    Total de Audiencias celebradas
+                    Total de audiencias celebradas
                 </h5>
                 <hr>
 

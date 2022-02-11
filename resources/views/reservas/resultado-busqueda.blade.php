@@ -9,7 +9,7 @@
     <div class="con d-flex justify-content-between align-items-center">
         <h4>Resultados</h4>
         <div>
-            <a class="btn btn-primary btn-sm" href="{{ route('book.new.room') }}">Reservar Nueva Audiencia</a>
+            <a class="btn btn-primary btn-sm" href="{{ route('book.new.room') }}">Agendar nueva audiencia</a>
         </div>
     </div>
 
@@ -26,9 +26,9 @@
                 <tr>
                     <th scope="col">Número de expediente</th>
                     <th scope="col">Folio</th>
-                    <th scope="col">Hora de Inicio</th>
+                    <th scope="col">Hora de inicio</th>
                     <th scope="col">Fin de la audiencia</th>
-                    <th scope="col">Tipo de Audiencia</th>
+                    <th scope="col">Tipo de audiencia</th>
                     <th scope="col">Sala</th>
                     <th scope="col">Estado</th>
                     <th class="text-center" scope="col"></th>
