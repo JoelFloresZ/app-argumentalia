@@ -7688,7 +7688,7 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
     });
     obs.on('SourceMuteStateChanged', function (data) {
       // Espera en cambio de escnea
-      //console.log(data);
+      console.log(data);
       _this20.audio.mutedDeskAudio = data.muted;
     });
     obs.on('RecordingStopping', function (data) {
@@ -79345,143 +79345,7 @@ var render = function () {
             ),
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "col-1" }, [
-            _c(
-              "button",
-              {
-                staticClass:
-                  "btn btn-sm btn-light rounded-circle d-flex justify-content-center align-content-center",
-                attrs: {
-                  type: "button",
-                  title: "Activar / Desactiva el audio del escritorio",
-                },
-                on: {
-                  click: function ($event) {
-                    return _vm.mutedAudieDessk()
-                  },
-                },
-              },
-              [
-                !_vm.audio.mutedDeskAudio
-                  ? _c(
-                      "svg",
-                      {
-                        staticClass: "h4 mx-0 my-1",
-                        attrs: {
-                          title: "Activar el audio del escritorio",
-                          xmlns: "http://www.w3.org/2000/svg",
-                          "aria-hidden": "true",
-                          role: "img",
-                          width: "1em",
-                          height: "1em",
-                          preserveAspectRatio: "xMidYMid meet",
-                          viewBox: "0 0 48 48",
-                        },
-                      },
-                      [
-                        _c(
-                          "g",
-                          {
-                            attrs: {
-                              fill: "none",
-                              stroke: "currentColor",
-                              "stroke-width": "4",
-                              "stroke-linejoin": "round",
-                            },
-                          },
-                          [
-                            _c("rect", {
-                              attrs: {
-                                x: "17",
-                                y: "4",
-                                width: "14",
-                                height: "27",
-                                rx: "7",
-                              },
-                            }),
-                            _c("path", {
-                              attrs: {
-                                d: "M9 23c0 8.284 6.716 15 15 15c8.284 0 15-6.716 15-15",
-                                "stroke-linecap": "round",
-                              },
-                            }),
-                            _c("path", {
-                              attrs: {
-                                d: "M24 38v6",
-                                "stroke-linecap": "round",
-                              },
-                            }),
-                          ]
-                        ),
-                      ]
-                    )
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.audio.mutedDeskAudio
-                  ? _c(
-                      "svg",
-                      {
-                        staticClass: "h4 mx-0 my-1",
-                        attrs: {
-                          title: "Desactivar el audio del escritorio",
-                          xmlns: "http://www.w3.org/2000/svg",
-                          "aria-hidden": "true",
-                          role: "img",
-                          width: "1em",
-                          height: "1em",
-                          preserveAspectRatio: "xMidYMid meet",
-                          viewBox: "0 0 48 48",
-                        },
-                      },
-                      [
-                        _c(
-                          "g",
-                          {
-                            attrs: {
-                              fill: "none",
-                              stroke: "currentColor",
-                              "stroke-width": "4",
-                              "stroke-linejoin": "round",
-                            },
-                          },
-                          [
-                            _c("path", {
-                              attrs: {
-                                d: "M31 24V11a7 7 0 1 0-14 0v13a7 7 0 1 0 14 0z",
-                              },
-                            }),
-                            _c("path", {
-                              attrs: {
-                                d: "M39 23a14.95 14.95 0 0 1-1.248 6",
-                                "stroke-linecap": "round",
-                              },
-                            }),
-                            _c("path", {
-                              attrs: {
-                                d: "M9 23c0 8.284 6.716 15 15 15c1.753 0 3.436-.3 5-.853",
-                                "stroke-linecap": "round",
-                              },
-                            }),
-                            _c("path", {
-                              attrs: {
-                                d: "M24 38v6",
-                                "stroke-linecap": "round",
-                              },
-                            }),
-                            _c("path", {
-                              attrs: {
-                                d: "M42 42L6 6",
-                                "stroke-linecap": "round",
-                              },
-                            }),
-                          ]
-                        ),
-                      ]
-                    )
-                  : _vm._e(),
-              ]
-            ),
-          ]),
+          _c("div", { staticClass: "col-1" }),
         ]),
       ]),
       _vm._v(" "),
