@@ -21,28 +21,40 @@
                    <p> Grabación: <b>{{tiempo}}</b> </p>
                 </div>
 
-                <!-- Video stream -->
-                <video class="w-75 shadow border overflow-hidden bg-dark" autoplay muted id="video-record" height="50%"></video>
+                 <!-- Video stream -->
+                <div class="row">
+                    <div class="col-8">
 
-                <!-- Control de grabación -->
-                <div class="mt-2 w-75 d-flex justify-content-center border p-2">
-                    <button v-if="controls.showPlay" type="button" class="btn btn-primary me-2" @click="showConfirmRecordStart">
-                        Grabar
-                    </button>
+                        <video class="w-100 shadow border overflow-hidden bg-dark" autoplay muted id="video-record" height="50%"></video>
+                         <!-- Control de grabación -->
+                        <div class="mt-2 w-100 d-flex justify-content-center border p-2">
+                            <button v-if="controls.showPlay" type="button" class="btn btn-primary me-2" @click="showConfirmRecordStart">
+                                Grabar
+                            </button>
 
-                    <button v-if="controls.showPause" type="button" class="btn btn-outline-dark me-2" @click="showConfirmRecesoRecord">
-                        Pausar
-                    </button>
+                            <button v-if="controls.showPause" type="button" class="btn btn-outline-dark me-2" @click="showConfirmRecesoRecord">
+                                Pausar
+                            </button>
 
-                    <button v-if="controls.showResumen" type="button" class="btn btn-outline-dark me-2" @click="showConfirmResumenRecord">
-                        Reanudar
-                    </button>
+                            <button v-if="controls.showResumen" type="button" class="btn btn-outline-dark me-2" @click="showConfirmResumenRecord">
+                                Reanudar
+                            </button>
 
-                    <button v-if="controls.showStop" type="button" class="btn btn-outline-danger" @click="showConfirmStopRecord">
-                        Finalizar
-                    </button>
+                            <button v-if="controls.showStop" type="button" class="btn btn-outline-danger" @click="showConfirmStopRecord">
+                                Finalizar
+                            </button>
 
-                </div>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <button type="button" class="btn btn-sm btn-light rounded-circle d-flex justify-content-center align-content-center" @click="mutedAudieDessk()" title="Activar / Desactiva el audio del escritorio">
+                            <!-- activado -->
+                            <svg v-if="!audio.mutedDeskAudio" class="h4 mx-0 my-1" title="Activar el audio del escritorio" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"><rect x="17" y="4" width="14" height="27" rx="7"/><path d="M9 23c0 8.284 6.716 15 15 15c8.284 0 15-6.716 15-15" stroke-linecap="round"/><path d="M24 38v6" stroke-linecap="round"/></g></svg>
+                            <!-- desactivado -->
+                            <svg v-if="audio.mutedDeskAudio" class="h4 mx-0 my-1" title="Desactivar el audio del escritorio" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"><path d="M31 24V11a7 7 0 1 0-14 0v13a7 7 0 1 0 14 0z"/><path d="M39 23a14.95 14.95 0 0 1-1.248 6" stroke-linecap="round"/><path d="M9 23c0 8.284 6.716 15 15 15c1.753 0 3.436-.3 5-.853" stroke-linecap="round"/><path d="M24 38v6" stroke-linecap="round"/><path d="M42 42L6 6" stroke-linecap="round"/></g></svg>
+                        </button>
+                    </div>
+                </div>               
             </div>
 
             <!-- Mas configuraciones -->
@@ -161,7 +173,10 @@ export default {
             },
             audioOBSMutedDesktop: false,
             audioOBSMutedMicAux: false,
-            btnActives: ['active','','','','',''] // permite activar los botones de video
+            btnActives: ['active','','','','',''], // permite activar los botones de video
+            audio: {
+                mutedDeskAudio: false
+            }
         }
     
     },
@@ -253,6 +268,7 @@ export default {
                 obs.send('SetFilenameFormatting', { 'filename-formatting': `${this.numeroExpediente}-${this.fechaCelebracionAudiencia}` })
                 //obs.send('SetVolume', {source: 'audio', volume: 1}).then(data => console.log(data)).catch(err => console.log(err))
                 obs.send('OpenProjector')
+                obs.send('SetMute', {source: 'Audio del escritorio', mute: true}).catch(err => console.log(err))
             })
             .catch(err => { // Promise convention dicates you have a catch on every chain.
                 // console.log(err);
@@ -863,7 +879,12 @@ export default {
                 .catch(function (error) {
                     //console.log(error);
                 })
+        },
+
+        mutedAudieDessk() {
+            obs.send('ToggleMute', {source: 'Audio del escritorio'}).catch(err => console.log(err))
         }
+
     },
 
     mounted() {
@@ -877,9 +898,10 @@ export default {
             this.activeSceneCurrent = data.sceneName
         });
 
-        obs.on('SourceVolumeChanged', data => {
-           console.log(data);
-        })
+       obs.on('SourceMuteStateChanged', data => { // Espera en cambio de escnea
+            //console.log(data);
+            this.audio.mutedDeskAudio = data.muted
+        });
         
         obs.on('RecordingStopping', data => {
                this.durationVideo   = data.recTimecode;
