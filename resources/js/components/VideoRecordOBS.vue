@@ -46,12 +46,12 @@
                         </div>
                     </div>
                     <div class="col-1">
-                        <button type="button" class="btn btn-sm btn-light rounded-circle d-flex justify-content-center align-content-center" @click="mutedAudieDessk()" title="Activar / Desactiva el audio del escritorio">
-                            <!-- activado -->
+                        <!-- <button type="button" class="btn btn-sm btn-light rounded-circle d-flex justify-content-center align-content-center" @click="mutedAudieDessk()" title="Activar / Desactiva el audio del escritorio">
+                            
                             <svg v-if="!audio.mutedDeskAudio" class="h4 mx-0 my-1" title="Activar el audio del escritorio" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"><rect x="17" y="4" width="14" height="27" rx="7"/><path d="M9 23c0 8.284 6.716 15 15 15c8.284 0 15-6.716 15-15" stroke-linecap="round"/><path d="M24 38v6" stroke-linecap="round"/></g></svg>
-                            <!-- desactivado -->
+                           
                             <svg v-if="audio.mutedDeskAudio" class="h4 mx-0 my-1" title="Desactivar el audio del escritorio" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"><path d="M31 24V11a7 7 0 1 0-14 0v13a7 7 0 1 0 14 0z"/><path d="M39 23a14.95 14.95 0 0 1-1.248 6" stroke-linecap="round"/><path d="M9 23c0 8.284 6.716 15 15 15c1.753 0 3.436-.3 5-.853" stroke-linecap="round"/><path d="M24 38v6" stroke-linecap="round"/><path d="M42 42L6 6" stroke-linecap="round"/></g></svg>
-                        </button>
+                        </button> -->
                     </div>
                 </div>               
             </div>
