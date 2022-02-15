@@ -47,12 +47,12 @@
                         </div>
                     </div>
                     <div class="col-1">
-                        <!-- <button type="button" class="btn btn-sm btn-light rounded-circle d-flex justify-content-center align-content-center" @click="mutedAudieDessk()" title="Activar / Desactiva el audio del escritorio">
+                        <button type="button" class="btn btn-sm btn-light rounded-circle d-flex justify-content-center align-content-center" @click="mutedAudieMicAux()" title="Activar / Desactiva el audio del Mic/Aux">
                             
-                            <svg v-if="!audio.mutedDeskAudio" class="h4 mx-0 my-1" title="Activar el audio del escritorio" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"><rect x="17" y="4" width="14" height="27" rx="7"/><path d="M9 23c0 8.284 6.716 15 15 15c8.284 0 15-6.716 15-15" stroke-linecap="round"/><path d="M24 38v6" stroke-linecap="round"/></g></svg>
+                            <svg v-if="!audio.mutedMixAuxAudio" class="h4 mx-0 my-1" title="Activar el audio del escritorio" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"><rect x="17" y="4" width="14" height="27" rx="7"/><path d="M9 23c0 8.284 6.716 15 15 15c8.284 0 15-6.716 15-15" stroke-linecap="round"/><path d="M24 38v6" stroke-linecap="round"/></g></svg>
                             
-                            <svg v-if="audio.mutedDeskAudio" class="h4 mx-0 my-1" title="Desactivar el audio del escritorio" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"><path d="M31 24V11a7 7 0 1 0-14 0v13a7 7 0 1 0 14 0z"/><path d="M39 23a14.95 14.95 0 0 1-1.248 6" stroke-linecap="round"/><path d="M9 23c0 8.284 6.716 15 15 15c1.753 0 3.436-.3 5-.853" stroke-linecap="round"/><path d="M24 38v6" stroke-linecap="round"/><path d="M42 42L6 6" stroke-linecap="round"/></g></svg>
-                        </button> -->
+                            <svg v-if="audio.mutedMixAuxAudio" class="h4 mx-0 my-1" title="Desactivar el audio del escritorio" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"><path d="M31 24V11a7 7 0 1 0-14 0v13a7 7 0 1 0 14 0z"/><path d="M39 23a14.95 14.95 0 0 1-1.248 6" stroke-linecap="round"/><path d="M9 23c0 8.284 6.716 15 15 15c1.753 0 3.436-.3 5-.853" stroke-linecap="round"/><path d="M24 38v6" stroke-linecap="round"/><path d="M42 42L6 6" stroke-linecap="round"/></g></svg>
+                        </button>
                     </div>
                 </div>               
             </div>
@@ -175,7 +175,8 @@ export default {
             audioOBSMutedMicAux: false,
             btnActives: ['active','','','','',''], // permite activar los botones de video
             audio: {
-                mutedDeskAudio: false
+                mutedDeskAudio: false,
+                mutedMixAuxAudio: false
             }
         }
     
@@ -269,6 +270,7 @@ export default {
                 //obs.send('SetVolume', {source: 'audio', volume: 1}).then(data => console.log(data)).catch(err => console.log(err))
                 obs.send('OpenProjector')
                 obs.send('SetMute', {source: 'Audio del escritorio', mute: true}).catch(err => console.log(err))
+                obs.send('SetMute', {source: 'Mic/Aux', mute: false}).catch(err => console.log(err))
             })
             .catch(err => { // Promise convention dicates you have a catch on every chain.
                 // console.log(err);
@@ -883,6 +885,10 @@ export default {
 
         mutedAudieDessk() {
             obs.send('ToggleMute', {source: 'Audio del escritorio'}).catch(err => console.log(err))
+        },
+
+        mutedAudieMicAux() {
+            obs.send('ToggleMute', {source: 'Mic/Aux'}).catch(err => console.log(err))
         }
 
     },
@@ -899,8 +905,14 @@ export default {
         });
 
        obs.on('SourceMuteStateChanged', data => { // Espera en cambio de escnea
-            console.log(data);
-            this.audio.mutedDeskAudio = data.muted
+            // console.log(data);
+            if(data.sourceName === "Mic/Aux") {
+                this.audio.mutedMixAuxAudio = data.muted
+            }
+
+            if(data.sourceName === "Audio del escritorio") {
+                this.audio.mutedDeskAudio = data.muted
+            }           
         });
         
         obs.on('RecordingStopping', data => {
