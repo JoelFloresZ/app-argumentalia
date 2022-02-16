@@ -7,7 +7,7 @@
                
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
             {{-- Agendar audiencia --}}
-            @if ( Auth::user()->tipoUsuario->permiso->eliminar)
+            @if ( Auth::user()->tipoUsuario->permiso->agendar)
                 {{-- validamos que la expediente este agendada, reagendada o cancelada para poder agendar  --}}
                 @if ($estadoAudiencia->id === 1 || $estadoAudiencia->id === 2 || $estadoAudiencia->id === 5)
                     <li>
