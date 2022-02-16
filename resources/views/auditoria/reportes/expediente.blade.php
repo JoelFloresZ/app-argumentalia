@@ -219,6 +219,8 @@
                 <tr>
                     <td>Nombre</td>
                     <td>Duración</td>
+                    {{-- <td>Hora de nicio</td> --}}
+                    <td>Hora de finalización</td>
                    {{--  <td>Grabación </td> --}}
                 </tr>
             </thead>
@@ -226,9 +228,19 @@
             <tbody>
                
                 @foreach ( $expediente->videoAudiencia as $video)
+                <?php
+                    /* $horaFormateadaFinalizar = preg_replace('/[\:]+/', '', \Carbon\Carbon::parse($video->created_at)->format('h:m:s'));  // ejemplo 0000 
+                    $horaFormateadaInicio = preg_replace('/[\:]+/', '', $video->duracion);  // ejemplo 0000
+                    $resultado = ($horaFormateadaFinalizar - $horaFormateadaInicio); */
+                    $horaFormateadaFinalizar = preg_replace('/[\:]+/', '', \Carbon\Carbon::parse($video->created_at)->format('h:m:s'));  // ejemplo 0000 
+                    $horaFormateadaInicio = preg_replace('/[\:]+/', '', $video->duracion);  // ejemplo 0000
+                    $resultado = ($horaFormateadaFinalizar - $horaFormateadaInicio);
+                ?>
                 <tr>
                     <td> {{ $video->nombre }} </td>
                     <td> {{ $video->duracion }} </td>
+                  {{--   <td> {{ \Carbon\Carbon::parse($resultado)->format('h:m:s A') }}  </td> --}}
+                    <td> {{ \Carbon\Carbon::parse($video->created_at)->format('h:m:s A') }}  </td>
                    {{--  <td>
                         {{ $video->created_at->diffForHumans()  }}
                         <div class="d-flex justify-content-end"> --}}
@@ -236,7 +248,7 @@
 
                             {{-- permiso de descargar archivos --}}
                             {{-- @if ( Auth::user()->tipoUsuario->permiso->descargar)
-                                <a class="btn btn-sm btn-outline-secondary" href="{{ route('video.download.audiencia', encrypt($video->id)) }}">Descargar</a>
+                                <a class="btn btn-sm btn-outline-seco ndary" href="{{ route('video.download.audiencia', encrypt($video->id)) }}">Descargar</a>
                             @endif --}}
                            
                         {{-- </div>
