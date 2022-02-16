@@ -74,12 +74,14 @@ class AuditoriasController extends Controller
     {
         try {
 
-            // $actualizarAudiencia = AudienciaModel::find($id);
-            // $actualizarAudiencia->estadoAudiencia_id = 6; // estado celebrandose
-            // $actualizarAudiencia->save();
-            return redirect('ingresar/evento');
+            $actualizarAudiencia = AudienciaModel::find($id);
 
-            return view('auditoria.login');
+            if($actualizarAudiencia->estadoAudiencia_id === 3 ) {
+                $actualizarAudiencia->estadoAudiencia_id = 4; // estado celebrandose
+                $actualizarAudiencia->save();
+            }           
+          
+            return redirect('ingresar/evento');
 
         } catch (\Throwable $th) {
             return back()->with('error', "Hubo un error al salir de la audiencia!");

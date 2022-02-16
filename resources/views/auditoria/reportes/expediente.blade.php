@@ -214,12 +214,13 @@
                 <tr>
                    <td>Grabación de la audiencia</td>
                    <td></td>
-                 {{--   <td></td> --}}
+                   <td></td>
+                   <td></td>
                 </tr>
                 <tr>
                     <td>Nombre</td>
                     <td>Duración</td>
-                    {{-- <td>Hora de nicio</td> --}}
+                    <td>Hora de inicio</td>
                     <td>Hora de finalización</td>
                    {{--  <td>Grabación </td> --}}
                 </tr>
@@ -229,18 +230,25 @@
                
                 @foreach ( $expediente->videoAudiencia as $video)
                 <?php
-                    /* $horaFormateadaFinalizar = preg_replace('/[\:]+/', '', \Carbon\Carbon::parse($video->created_at)->format('h:m:s'));  // ejemplo 0000 
-                    $horaFormateadaInicio = preg_replace('/[\:]+/', '', $video->duracion);  // ejemplo 0000
-                    $resultado = ($horaFormateadaFinalizar - $horaFormateadaInicio); */
-                    $horaFormateadaFinalizar = preg_replace('/[\:]+/', '', \Carbon\Carbon::parse($video->created_at)->format('h:m:s'));  // ejemplo 0000 
-                    $horaFormateadaInicio = preg_replace('/[\:]+/', '', $video->duracion);  // ejemplo 0000
-                    $resultado = ($horaFormateadaFinalizar - $horaFormateadaInicio);
+
+                    $data = explode( ':', $video->duracion);
+                   
+                    $hours   = intval($data[0]);
+                    $minutes = intval($data[1]);
+                    $seconds = intval($data[2]);
+
+                    $horaFinal = $video->created_at->format('h:i:s A'); 
+                    $nuevaHoraInicio = strtotime ( "-$hours  hour" , strtotime ($horaFinal) ) ; 
+                    $nuevaHoraInicio = strtotime ( "-$minutes minute" , $nuevaHoraInicio ) ; 
+                    $nuevaHoraInicio = strtotime ( "-$seconds second" , $nuevaHoraInicio ) ; 
+                    $nuevaHoraInicio = date ('h:i:s A' , $nuevaHoraInicio); 
+                    
                 ?>
                 <tr>
                     <td> {{ $video->nombre }} </td>
                     <td> {{ $video->duracion }} </td>
-                  {{--   <td> {{ \Carbon\Carbon::parse($resultado)->format('h:m:s A') }}  </td> --}}
-                    <td> {{ \Carbon\Carbon::parse($video->created_at)->format('h:m:s A') }}  </td>
+                    <td> {{ $nuevaHoraInicio }}  </td>
+                    <td> {{ $video->created_at->format('h:i:s A') }}  </td>
                    {{--  <td>
                         {{ $video->created_at->diffForHumans()  }}
                         <div class="d-flex justify-content-end"> --}}
