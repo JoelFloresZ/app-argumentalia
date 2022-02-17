@@ -6865,10 +6865,8 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
         return obs.send('GetSceneList');
       }).then(function (data) {
         // console.log(data.scenes);
-        _this4.scenes = data.scenes;
-
-        _this4.modal.hide(); //Permite asignar el nombre del archivo
-
+        _this4.scenes = data.scenes; //this.modal.hide();
+        //Permite asignar el nombre del archivo
 
         obs.send('SetFilenameFormatting', {
           'filename-formatting': "".concat(_this4.numeroExpediente, "-").concat(_this4.fechaCelebracionAudiencia)
@@ -6890,8 +6888,7 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
       })["catch"](function (err) {
         // Promise convention dicates you have a catch on every chain.
         // console.log(err);
-        _this4.modal.hide();
-
+        //this.modal.hide()
         if (err.code === 'CONNECTION_ERROR') {
           Swal.fire({
             icon: 'error',
@@ -7702,7 +7699,7 @@ var obs2 = new OBSWebSocket(); // Hace una conexion a una maquina externa median
   mounted: function mounted() {
     var _this20 = this;
 
-    this.launchModal();
+    //this.launchModal(); 
     this.startVideoWebCam();
     this.listMediaDevices();
     this.cronometro(); // Obtner escena actual activo

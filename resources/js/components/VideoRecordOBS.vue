@@ -264,7 +264,7 @@ export default {
             }).then(data => {
                 // console.log(data.scenes);
                 this.scenes = data.scenes
-                this.modal.hide();
+                //this.modal.hide();
                 //Permite asignar el nombre del archivo
                 obs.send('SetFilenameFormatting', { 'filename-formatting': `${this.numeroExpediente}-${this.fechaCelebracionAudiencia}` })
                 //obs.send('SetVolume', {source: 'audio', volume: 1}).then(data => console.log(data)).catch(err => console.log(err))
@@ -274,7 +274,7 @@ export default {
             })
             .catch(err => { // Promise convention dicates you have a catch on every chain.
                 // console.log(err);
-                this.modal.hide()
+                //this.modal.hide()
                 if(err.code === 'CONNECTION_ERROR') {
                     Swal.fire({
                         icon: 'error',
@@ -897,7 +897,7 @@ export default {
     },
 
     mounted() {
-        this.launchModal(); 
+        //this.launchModal(); 
         this.startVideoWebCam()
         this.listMediaDevices()
         this.cronometro()
