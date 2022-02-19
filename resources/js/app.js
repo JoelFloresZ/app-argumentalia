@@ -33,6 +33,7 @@ Vue.component('chart-bar-adiencias-celebradas', require('./components/ChartAudie
 Vue.component('chart-videoconferencia-total', require('./components/ChartVideoconferencia.vue').default);
 Vue.component('analisis-disc-local', require('./components/AnalisisDiscLocal.vue').default);
 Vue.component('chart-disk-consumo-mb', require('./components/ChartVideoDiskYear.vue').default);
+Vue.component('bar-audio', require('./components/AudioAnalytic.vue').default);
 
 
 /**

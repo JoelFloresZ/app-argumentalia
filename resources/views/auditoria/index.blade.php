@@ -80,6 +80,7 @@
                <input type="text" id="fechaCelebracion" value="{{ $expediente->audiencia->fechaCelebracion }}" hidden>
                
                <video-recording-obs />
+               
             </div>         
          </div>
 
@@ -106,9 +107,7 @@
 @endsection
 
 @section('js')
-     {{--  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> --}}
-     {{--  <script src="{{ asset('js/sala/form-notas.js') }}"></script> --}}
-     {{--  <script src="{{ asset('js/sala/form-files.js') }}"></script> --}}
-     {{--  <script src="{{ asset('js/sala/asistencia.js') }}"></script> --}}
+     
+    
 @endsection
 

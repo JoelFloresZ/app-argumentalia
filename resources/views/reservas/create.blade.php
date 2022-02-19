@@ -173,15 +173,15 @@
 
             <div class="col-3">
                 <div class="mb-3">
-                    <label for="tipo_id" class="form-label">Tipo de audiencia:</label>
-                    <select class="form-select  @error('tipo_id') is-invalid @enderror" name="tipo_id" id="tipo_id" value="{{ old('tipo_id') }}">
+                    <label for="tipo_audiencia" class="form-label">Tipo de audiencia:</label>
+                    <select class="form-select  @error('tipo_audiencia') is-invalid @enderror" name="tipo_audiencia" id="tipo_audiencia" value="{{ old('tipo_audiencia') }}">
                         <option selected>Seleccione una audiencia</option>
                         @foreach ($listaTipoAudiencia as $audiencia)
                             <option value="{{ $audiencia->id }}">{{ $audiencia->nombre}}</option>
                         @endforeach
                       </select>
-                    @error('tipo_id')
-                        <div class="alert alert-danger mt-1">{{ 'Debe de seleccionar una opción de la lista' }}</div>
+                    @error('tipo_audiencia')
+                        <div class="alert alert-danger mt-1">{{ $message }}</div>
                     @enderror
                 </div>
             </div>

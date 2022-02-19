@@ -16,6 +16,8 @@ use App\Models\TokenAudiencia as TokenAudienciaModel;
 use App\Models\TokenAudienciaInvitado as TokenAudienciaInvitadoModel;
 use App\Rules\ControlDeHora;
 use App\Rules\FechaCelebracion;
+use App\Rules\RequiredTipoAudiencia;
+use App\Rules\VilidateAudienciaConExpediente;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
@@ -70,7 +72,7 @@ class ReservaSalaController extends Controller
         $dateActual = date('dmY'); // Obtenemosla fecha actual
         $validatedData = $request->validate([
             // Expediente
-            'numero_expediente'  => ['required','string', 'unique:expedientes'],
+            'numero_expediente'  => ['required','string'],
             'folio'                 => ['required', 'numeric', 'unique:expedientes'],
             'juez'                  => ['required'],
             'testigo'               => ['required'],
@@ -81,7 +83,7 @@ class ReservaSalaController extends Controller
             // Audiencia
             'centroJusticia_id' => ['required', 'numeric'],
             'sala_id' => ['required', 'numeric'],
-            'tipo_id' => ['required', 'numeric'],
+            'tipo_audiencia' => [new RequiredTipoAudiencia , new VilidateAudienciaConExpediente($request->numero_expediente)],
             //'expediente_id' => ['required'],
             //'estadoAudiencia_id' => ['required'],
             'fechaCelebracion'  => ['required', new FechaCelebracion],
@@ -107,7 +109,7 @@ class ReservaSalaController extends Controller
                     $newAudiencia = new AudienciaModel;
                     $newAudiencia->centroJusticia_id  = $request->centroJusticia_id;
                     $newAudiencia->sala_id            = $request->sala_id;
-                    $newAudiencia->tipo_id            = $request->tipo_id;
+                    $newAudiencia->tipo_id            = $request->tipo_audiencia;
                     $newAudiencia->expediente_id      = $newExpediente->id;
                     $newAudiencia->estadoAudiencia_id = 1; //Por Defecto es el Uno "Programado" ['Programado, 'En progreso', 'Cancelado', 'Reprogramado', 'Finalizado']
                     $newAudiencia->fechaCelebracion   = $request->fechaCelebracion;

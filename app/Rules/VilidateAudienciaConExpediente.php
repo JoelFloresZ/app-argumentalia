@@ -2,6 +2,8 @@
 
 namespace App\Rules;
 use App\Models\Expediente;
+use App\Models\Audiencia;
+use App\Models\TipoAudiencia;
 
 use Illuminate\Contracts\Validation\Rule;
 
@@ -27,7 +29,30 @@ class VilidateAudienciaConExpediente implements Rule
      */
     public function passes($attribute, $value)
     {
-        $expediente = Expediente::where('numero_expediente', $this->expediente);
+        $expedientes = Expediente::where('numero_expediente', $this->expediente)->get();
+
+        if(count($expedientes) > 0) {
+            
+            foreach ($expedientes as $expediente) {
+
+                $audiencia = Audiencia::where('expediente_id', $expediente->id)->where('tipo_id', $value)->first();
+
+                if($audiencia) {
+                   return false;
+                } 
+        
+            }
+
+            return true;
+
+        } else {
+            return true;
+        }
+            
+
+       
+        
+
     }
 
     /**
@@ -37,6 +62,6 @@ class VilidateAudienciaConExpediente implements Rule
      */
     public function message()
     {
-        return 'The validation error message.';
+        return 'Ya existe un expediente con el mismo tipo de audiencia.';
     }
 }
