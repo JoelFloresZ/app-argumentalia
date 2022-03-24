@@ -202,8 +202,8 @@
                 <tbody>
                     <tr>
                         <td style="width: 33%">{{ $expediente->audiencia->fechaCelebracion }}</td>
-                        <td style="width: 33%">{{ $expediente->audiencia->horaFinalizar }}</td>
                         <td style="width: 33%">{{ $expediente->audiencia->horaInicio }}</td>
+                        <td style="width: 33%">{{ $expediente->audiencia->horaFinalizar }}</td>
                     </tr>
                 </tbody>
             </table>
